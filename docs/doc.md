@@ -6,7 +6,7 @@
 
 3. Your program should be able to run in two modes, which may be indicated via command-line switches.
 
-    1. When running GitInsight in commit frequency mode, it should produce textual output on stdout that lists the number of commits per day. For example, the output might look like in the following:
+    1. When running GitInsight in commit frequency mode, it should produce textual output on stdout that lists the number of commits per day. For example, the output might look like the following:
         <details>
         <summary>Example</summary>
 
@@ -19,7 +19,7 @@
                 5 2018-01-18 
         </details>
 
-    2. When running GitInsight in commit author mode, it should produce textual output on stdout that lists the number of commits per day per author. For example, the output might look like in the following:
+    2. When running GitInsight in commit author mode, it should produce textual output on stdout that lists the number of commits per day per author. For example, the output might look like the following:
         <details>
         <summary>Example</summary>
 

@@ -3,8 +3,6 @@ name: Build and Test
 
 on:
   push:
-    branches:
-      - main
     paths-ignore:
       - "*.md"
 
@@ -26,4 +24,6 @@ jobs:
 
       - name: Build dockerimage
         run: docker build -t newgit .
+      - name: Run tests
+        run: docker run newgit 'test /p:CollectCoverage=true'
         

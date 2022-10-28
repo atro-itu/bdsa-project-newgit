@@ -6,4 +6,5 @@ COPY . ./
 # Restore as distinct layers
 RUN dotnet restore
 # Test
-RUN dotnet test /p:CollectCoverage=true
+
+ENTRYPOINT [ "dotnet" ]

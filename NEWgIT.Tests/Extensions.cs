@@ -1,8 +1,6 @@
-namespace NEWgIT.Tests;
-
 public static class Extensions
 {
-    public static void ForceDelete(this Repository repo)
+    public static void Delete(this Repository repo)
     {
         DeleteReadOnlyDirectory(repo.Info.Path);
     }

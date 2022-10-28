@@ -26,7 +26,7 @@ public class UnitTest1 : IDisposable
 
         _repo.Commit("test", new Signature("test", "test", DateTimeOffset.Now), new Signature("test", "test", DateTimeOffset.Now));
 
-        _repo.Commits.Count().Should().Be(1);
+        _repo.Commits.Count().Should().Be(2);
         // true.Should().Be(true);
     }
 

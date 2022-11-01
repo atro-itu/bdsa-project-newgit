@@ -1,5 +1,5 @@
 # Functional Requirements
-
+## Week 1
 1. Build a small C#/.Net Core application that can be run from the command-line. As a parameter, it should receive the path to a Git repository that resides in a local directory, i.e., a directory on your computer.
 
 2. Given that path to a repository, your application should collect all commits with respective author names and author dates. The data can be collected with the library libgit2sharp, which can be installed from NuGet.
@@ -41,3 +41,10 @@
                 1 2018-01-04
                 5 2018-01-05 
         </details>
+
+## Week 2
+
+# Non Functional Requirements
+## Week 1
+None
+## Week 2

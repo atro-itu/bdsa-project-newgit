@@ -1,8 +1,7 @@
 namespace NEWgIT;
 
-public class CommitCounter
+public static class CommitCounter
 {
-    public static void main (string[] args){}
     public static void FrequencyMode()
     {
         throw new NotImplementedException();
@@ -12,5 +11,5 @@ public class CommitCounter
     {
         throw new NotImplementedException();
     }
-    
+
 }

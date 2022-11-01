@@ -43,8 +43,14 @@
         </details>
 
 ## Week 2
+1. GIT analyzations has to be stored in a database.
+2. The analyzations has to know which repo they are from.
+    1. If repo is re-analyzed and analyzations are outdated it has to update the database.
+    2. If repo is re-analyzed and analyzations are up to date it has to read analyzations from the database.
+3. Has to implement resonable test.
 
 # Non Functional Requirements
 ## Week 1
 None
 ## Week 2
+1. Update docs.

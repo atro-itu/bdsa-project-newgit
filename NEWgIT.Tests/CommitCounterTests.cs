@@ -44,6 +44,17 @@ public class CommitCounterTests : IDisposable
         _repository.Commits.Count().Should().Be(10);
     }
 
+    public void AuthorMode_Should_Return_Sum_Of_Commits_Per_Author()
+    {
+        // Arrange
+
+        // Act
+
+        // Assert
+
+        _repository.Commits.Count().Should().Be(10);
+    }
+
     public void Dispose()
     {
         _repository.Dispose();

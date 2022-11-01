@@ -11,5 +11,4 @@ public static class CommitCounter
     {
         throw new NotImplementedException();
     }
-
 }

@@ -3,6 +3,8 @@ name: Build and Test
 
 on:
   push:
+    branches:
+      - main
     paths-ignore:
       - "*.md"
 
@@ -22,8 +24,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Build dockerimage
-        run: docker build -t newgit .
-      - name: Run tests
-        run: docker run newgit test 
-        
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Test
+        run: dotnet test

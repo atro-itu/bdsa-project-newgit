@@ -10,11 +10,9 @@ public class CommitCounterTests : IDisposable
     public CommitCounterTests()
     {
         _path = "./repo";
-        // string localPath = "@/TestFiles/";
 
         Repository.Init(_path);
         _repository = new Repository(_path);
-        //_repository.Delete();
 
         // Lucas commits - 2 now - 2 25/5/19
         _repository.Commit("Her kommer smølfe Cowboy Joe", new Signature("Lucas", "lucas@gmail.com", DateTimeOffset.Now), new Signature("Lucas", "lucas@gmail.com", DateTimeOffset.Now), options: opts);
@@ -43,8 +41,7 @@ public class CommitCounterTests : IDisposable
 
         // Assert
 
-        //_repository.Commits.Count().Should().Be(10);
-        true.Should().Be(true);
+        _repository.Commits.Count().Should().Be(10);
     }
 
     public void Dispose()

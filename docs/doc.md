@@ -1,5 +1,5 @@
 # Functional Requirements
-
+## Week 1
 1. Build a small C#/.Net Core application that can be run from the command-line. As a parameter, it should receive the path to a Git repository that resides in a local directory, i.e., a directory on your computer.
 
 2. Given that path to a repository, your application should collect all commits with respective author names and author dates. The data can be collected with the library libgit2sharp, which can be installed from NuGet.
@@ -41,3 +41,16 @@
                 1 2018-01-04
                 5 2018-01-05 
         </details>
+
+## Week 2
+1. GIT analyzations has to be stored in a database.
+2. The analyzations has to know which repo they are from.
+    1. If repo is re-analyzed and analyzations are outdated it has to update the database.
+    2. If repo is re-analyzed and analyzations are up to date it has to read analyzations from the database.
+3. Has to implement resonable test.
+
+# Non Functional Requirements
+## Week 1
+None
+## Week 2
+1. Update docs.

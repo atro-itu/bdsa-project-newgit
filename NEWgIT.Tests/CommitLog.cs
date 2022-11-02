@@ -1,4 +1,4 @@
-public static class Extensions
+public static class CommitLog
 {
     public static void Seed(this Repository repo)
     {

@@ -7,11 +7,11 @@ public static class CommitCounter
 
     public static Dictionary<string, Dictionary<DateOnly, int>> AuthorMode(ICommitLog log)
     {
-        var authors = log.DistinctBy(c => c.Author.Name);
+        var authors = log.DistinctBy(c => c.Author.Name).Select(c => c.Author.Name);
         var result = new Dictionary<string, Dictionary<DateOnly, int>>();
         foreach (var author in authors)
         {
-            result.Add(author.Author.Name, FrequencyByAuthor(log, author.Author.Name));
+            result.Add(author, FrequencyByAuthor(log, author));
         }
         return result;
     }

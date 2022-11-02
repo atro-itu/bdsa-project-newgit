@@ -18,13 +18,38 @@ public class CommitCounterTests : IDisposable
     [Fact]
     public void FrequencyMode_Should_Return_Sum_Of_Commits_Per_Day()
     {
-        _repository.Commits.Count().Should().Be(10);
+        //Arrange
+        var log = _repository.Commits;
+
+        //Act
+        var result = CommitCounter.FrequencyMode(log);
+
+        //Assert
+        result.Count.Should().Be(3);
+        result[new DateOnly(2019, 5, 25)].Should().Be(4);
+        result[new DateOnly(2019, 5, 26)].Should().Be(3);
+        result[DateOnly.FromDateTime(DateTimeOffset.Now.Date)].Should().Be(3);
     }
 
-    [Fact]
-    public void AuthorMode_Should_Return_Sum_Of_Commits_Per_Author()
+    [Theory]
+    [InlineData("Lucas", new int[] { 2, 2, 0 })]
+    [InlineData("Bank", new int[] { 1, 1, 2 })]
+    [InlineData("Trøstrup", new int[] { 0, 1, 1 })]
+    public void AuthorMode_Should_Return_Sum_Of_Commits_Per_Author(string author, int[] expected)
     {
-        _repository.Commits.Count().Should().Be(10);
+        //Arrange
+        var log = _repository.Commits;
+        var Dates = new DateOnly[] { DateOnly.FromDateTime(DateTimeOffset.Now.Date), new DateOnly(2019, 5, 25), new DateOnly(2019, 5, 26) };
+
+        //Act
+        var result = CommitCounter.AuthorMode(log, author);
+
+        //Assert
+        for (int i = 0; i < Dates.Length; i++)
+        {
+            if (expected[i] == 0) continue;
+            result[Dates[i]].Should().Be(expected[i]);
+        }
     }
 
     public void Dispose()

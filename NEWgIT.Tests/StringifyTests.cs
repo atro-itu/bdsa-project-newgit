@@ -7,15 +7,14 @@ public class StringifyTests : IDisposable
 {
     Repository _repository;
     string _path;
-
     string _remove;
+    
     public StringifyTests()
     {
         _path = "./repo2";
 
         Repository.Init(_path);
         _repository = new Repository(_path);
-
         _repository.Seed();
 
         var chars = new List<char> () { '\t', ' ' };

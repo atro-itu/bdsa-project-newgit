@@ -1,4 +1,5 @@
 using System.Text;
+using System.Globalization;
 
 namespace NEWgIT;
 
@@ -22,8 +23,11 @@ public static class Stringify
         var sortedDic = new SortedDictionary<DateOnly, int>(dic);
         foreach (var date in sortedDic.Reverse())
         {
-            result.Append($"\n\t{date.Value}\t{date.Key}");
+
+            result.Append($"\n\t{date.Value}\t{date.Key.ToString(GetFormat())}");
         }
         return result.ToString();
     }
+
+    public static CultureInfo GetFormat() => CultureInfo.CreateSpecificCulture("da-DK");
 }

@@ -29,6 +29,7 @@ public class CommitCounterTests : IDisposable
         result[new DateOnly(2010, 05, 25)].Should().Be(1);
         result[new DateOnly(2010, 05, 26)].Should().Be(1);
         result[new DateOnly(2019, 5, 26)].Should().Be(2);
+        result[new DateOnly(2019, 5, 25)].Should().Be(3);
         result[DateOnly.FromDateTime(DateTimeOffset.Now.Date)].Should().Be(3);
     }
 

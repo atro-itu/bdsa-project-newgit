@@ -23,7 +23,6 @@ public static class Stringify
         var sortedDic = new SortedDictionary<DateOnly, int>(dic);
         foreach (var date in sortedDic.Reverse())
         {
-
             result.Append($"\n\t{date.Value}\t{date.Key.ToString(GetFormat())}");
         }
         return result.ToString();

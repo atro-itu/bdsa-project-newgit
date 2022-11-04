@@ -18,6 +18,7 @@ public class AnalysisRepository : IAnalysisRepository
         if (entity == null)
         {
             entity = new Analysis();
+            HashSet<Commit> commits = analysisDTO.Commits.Select(commitInfo => new Commit(commitInfo.author, commitInfo.date, entity)).ToHashSet(); // maybe
             entity.RepoName = analysisDTO.repoName;
 
             _context.Analysis.Add(entity);
@@ -36,7 +37,11 @@ public class AnalysisRepository : IAnalysisRepository
 
     public IReadOnlyCollection<AnalysisDTO> Read()
     {
-        throw new NotImplementedException();
+        var Analysis =
+            from a in _context.Analysis
+            select new AnalysisDTO(a.Id, a.RepoName, a.LatestCommitHash);
+
+        return Analysis.ToArray();
 
     }
 
@@ -70,7 +75,6 @@ public class AnalysisRepository : IAnalysisRepository
             _context.SaveChanges();
             response = Response.Updated;
         }
-
         return response;
     }
 

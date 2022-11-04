@@ -36,22 +36,46 @@ public class AnalysisRepository : IAnalysisRepository
 
     public IReadOnlyCollection<AnalysisDTO> Read()
     {
-        var analysis
+        throw new NotImplementedException();
+
     }
 
-    public AnalysisDTO? Find(int ID)
+    public AnalysisDTO Find(int ID)
     {
+        var Analysis =
+            from a in _context.Analysis
+            where a.Id == ID
+            select new AnalysisDTO(a.Id, a.RepoName, a.LatestCommitHash);
 
+        return Analysis.FirstOrDefault()!;
     }
 
     public Response Update(AnalysisUpdateDTO analysis)
     {
+        var Analysis = _context.Analysis.Find(analysis.Id);
+        Response response;
+        if (Analysis is null)
+        {
+            response = Response.NotFound;
+        }
+        else if (_context.Analysis.FirstOrDefault(a => a.Id != analysis.Id && a.RepoName != analysis.repoName && a.LatestCommitHash != analysis.LatestCommitHash) != null)
+        {
+            response = Response.Conflict;
+        }
+        else
+        {
+            Analysis.Id = analysis.Id;
+            Analysis.RepoName = analysis.repoName;
+            Analysis.LatestCommitHash = analysis.LatestCommitHash;
+            _context.SaveChanges();
+            response = Response.Updated;
+        }
 
-
+        return response;
     }
 
     public Response Delete(AnalysisDeleteDTO analysis)
     {
-
+        throw new NotImplementedException();
     }
 }

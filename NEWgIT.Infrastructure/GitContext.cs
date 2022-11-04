@@ -12,6 +12,6 @@ public class GitContext : DbContext
         modelBuilder.Entity<Analysis>()
                     .HasIndex(i => i.RepoName)
                     .IsUnique();
-
     }
+
 }

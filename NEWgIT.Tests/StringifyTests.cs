@@ -22,7 +22,11 @@ public class StringifyTests
                             "3\t25.05.2019\n" + 
                             "1\t26.05.2010\n" + 
                             "1\t25.05.2010";
+
+        //Act
         var result = Stringify.FrequencyMode(frequencyDictionary);
+
+        // Assert
         result.Should().Be(expected);
     }
 
@@ -74,6 +78,8 @@ public class StringifyTests
 
         // Act
         var result = Stringify.AuthorMode(authorDictionary);
+
+        // Assert
         result.Should().BeEquivalentTo(expected);
     }
 }

@@ -3,23 +3,8 @@ using System.Text.RegularExpressions;
 namespace NEWgIT.Tests;
 
 [Collection("Stringify")]
-public class StringifyTests : IDisposable
+public class StringifyTests
 {
-    Repository _repository;
-    string _path;
-    string _remove;
-    
-    public StringifyTests()
-    {
-        _path = "./repo2";
-
-        Repository.Init(_path);
-        _repository = new Repository(_path);
-        _repository.Seed();
-
-        var chars = new List<char> () { '\t', ' ' };
-        _remove = "[" + String.Concat(chars) + "]";
-    }
     [Fact]
     public void Stringify_FrequencyMode_Should_Return_Frequency_String()
     {
@@ -90,11 +75,5 @@ public class StringifyTests : IDisposable
         // Act
         var result = Stringify.AuthorMode(authorDictionary);
         result.Should().BeEquivalentTo(expected);
-    }
-
-    public void Dispose()
-    {
-        _repository.Dispose();
-        Directory.Delete(_path, recursive: true);
     }
 }

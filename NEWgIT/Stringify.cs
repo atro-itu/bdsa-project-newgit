@@ -5,25 +5,25 @@ namespace NEWgIT;
 
 public static class Stringify 
 {
-    public static string AuthorMode(Dictionary<string, Dictionary<DateOnly, int>> dic)
+    public static string AuthorMode(Dictionary<string, Dictionary<DateOnly, int>> dictionary)
     {
         StringBuilder result = new StringBuilder();
-        var sortedDic = new SortedDictionary<string, Dictionary<DateOnly, int>>(dic);
-        foreach (var author in sortedDic)
+        var sortedDictionary = new SortedDictionary<string, Dictionary<DateOnly, int>>(dictionary);
+        foreach (var author in sortedDictionary)
         {
             result.Append("\n").Append(author.Key);
-            result.Append(FrequencyMode(author.Value));
+            result.Append(FrequencyMode(author.Value, "\t"));
         }
         return result.ToString();
     }
 
-    public static string FrequencyMode(Dictionary<DateOnly, int> dic)
+    public static string FrequencyMode(Dictionary<DateOnly, int> dictionary, string indent = "")
     {
         StringBuilder result = new StringBuilder();
-        var sortedDic = new SortedDictionary<DateOnly, int>(dic);
-        foreach (var date in sortedDic.Reverse())
+        var sortedDictionary = new SortedDictionary<DateOnly, int>(dictionary);
+        foreach (var date in sortedDictionary.Reverse())
         {
-            result.Append($"\n\t{date.Value}\t{date.Key.ToString(GetFormat())}");
+            result.Append("\n" + indent + $"{date.Value}\t{date.Key.ToString(GetFormat())}");
         }
         return result.ToString();
     }

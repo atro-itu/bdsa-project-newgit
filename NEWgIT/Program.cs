@@ -21,15 +21,19 @@ public class Program
         Parser.Default.ParseArguments<Options>(args)
             .WithParsed<Options>(o =>
                 {
-                    string repo = o.RepositoryPath is null ? Directory.GetCurrentDirectory() : o.RepositoryPath;
+                    string repoPath = o.RepositoryPath is null ? Directory.GetCurrentDirectory() : o.RepositoryPath;
                     if (o.AnalysisMode == "frequency")
                     {
-                        Console.WriteLine($"You chose frequency mode on repo: {repo}");
+                        var repository = new Repository(repoPath);
+                        var log = repository.Commits;
+                        Console.WriteLine(Stringify.FrequencyMode(CommitCounter.FrequencyMode(log)));
 
                     }
                     else if (o.AnalysisMode == "author")
                     {
-                        Console.WriteLine($"You chose author mode on repo: {repo}");
+                        var repository = new Repository(repoPath);
+                        var log = repository.Commits;
+                        Console.WriteLine(Stringify.AuthorMode(CommitCounter.AuthorMode(log)));
                     }
                 });
     }

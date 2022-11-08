@@ -61,8 +61,7 @@ None
 1. The REST API shall receive a repository identifier from GitHub. The form could be:
     1. <github_user>/<repository_name> 
     2. <github_organization>/<repository_name>
-2. If the repository does not exist locally, then your GitInsight application shall clone the remote repository from GitHub and store it in a temporary     local directory on your computer.
+2. If the repository does not exist locally, then your GitInsight application shall clone the remote repository from GitHub and store it in a temporary local directory on your computer.
 3. In case the repository was already cloned earlier, then the respective local repository shall be updated. That is, using libgit2sharp your application should update the local repository similar to running a git pull if you were to update a Git repository manually.
-4. The analyses that your GitInsight application is performing on that now cloned local repository remain the same.
-5. The REST API shall return the analysis results via a JSON objects.
-
+4. The analysis that your GitInsight application is performing (on that now cloned local repository) should remain the same.
+5. The REST API shall return the analysis results via a JSON object.

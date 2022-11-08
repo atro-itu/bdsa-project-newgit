@@ -5,7 +5,7 @@ None
 ## Week 2
 1. GIT analyzations has to be stored in a database.
 2. Has to implement resonable test.
-3. doc has to be up to date with product requirements.  
+3. doc.md has to be up to date with product requirements.  
 
 ## Week 3
 1. Implement one or more integration tests in your test suite. 

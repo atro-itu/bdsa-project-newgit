@@ -30,7 +30,6 @@ Remember, such a name has to be appropriate in a professional setting.
 
 Please send in the message to the pull-request the IDs of your group members too so that TAs can more easily resolve merge conflicts.
 
-
 ## Week One (Week 43)
 
 Build a small C#/.Net Core application that can be run from the command-line.
@@ -105,7 +104,6 @@ While designing and implementing your persistence solution, remember that you re
 
 Make sure that your test suite covers the newly introduced persistence feature in a reasonable way.
 
-
 Update your project documentation in the `docs` directory to reflect the latest design and architecture of your application.
 That is, illustrate the architecture of your tool with a suitable diagram.
 Additionally, based the project description so far, generate a list of functional and non-functional requirements and store them in a respective text file.
@@ -121,7 +119,6 @@ The analyses that your `GitInsight` application is performing on that now cloned
 The REST API shall return the analysis results via a JSON objects.
 
 For example, in case your application is running on your computer (`localhost`) and it is listening to port 8000, then on a `GET` request to the route `http://localhost:8000/mono/xwt` will either clone or update the repository `mono/xwt` from GitHub into a temporary directory on your computer, run the analysis on that local repository, store in or update the database accordingly, and return the analysis results via a corresponding JSON object.
-
 
 Update your test suite so that it covers the newly introduced persistence feature in a reasonable way.
 Besides unit tests implement one or more integration tests in your test suite.

@@ -1,3 +1,5 @@
+namespace NEWgIT;
+
 public static class Extensions
 {
     public static void Seed(this Repository repo)

@@ -1,6 +1,6 @@
 namespace NEWgIT.Infrastructure;
 
-public class Commit
+public class CommitInfo
 {
     public int Id;
 
@@ -9,13 +9,12 @@ public class Commit
 
     public DateTime Date;
 
-    public Analysis Analysis;
+    public Analysis Analysis = null!;
 
-    public Commit(string author, DateTime date, Analysis analysis)
+    public CommitInfo(string author, DateTime date)
     {
         Author = author;
         Date = date;
-        Analysis = analysis;
     }
 }
 

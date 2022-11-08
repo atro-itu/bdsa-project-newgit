@@ -51,13 +51,11 @@
 
 ## Week 3
 1. Implement one or more integration tests in your test suite. 
-2. Illustrate the architecture of your REST service using a suitable notation.
 
 # Non Functional Requirements
 ## Week 1
 None
 ## Week 2
-1. Update docs.
 
 ## Week 3
 1. The REST API shall receive a repository identifier from GitHub. The form could be:
@@ -67,4 +65,4 @@ None
 3. In case the repository was already cloned earlier, then the respective local repository shall be updated. That is, using libgit2sharp your application should update the local repository similar to running a git pull if you were to update a Git repository manually.
 4. The analyses that your GitInsight application is performing on that now cloned local repository remain the same.
 5. The REST API shall return the analysis results via a JSON objects.
-6. Illustrate with an UML activity diagram the sequence of operations that your GitInsight application performs once triggered with a respective GET request and until it responds with the corresponding JSON data.
+

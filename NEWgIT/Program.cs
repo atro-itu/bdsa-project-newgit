@@ -18,23 +18,21 @@ public class Program
 
     public static void Main(string[] args)
     {
-        Parser.Default.ParseArguments<Options>(args)
-            .WithParsed<Options>(o =>
-                {
-                    string repoPath = o.RepositoryPath is null ? Directory.GetCurrentDirectory() : o.RepositoryPath;
-                    if (o.AnalysisMode == "frequency")
-                    {
-                        var repository = new Repository(repoPath);
-                        var log = repository.Commits;
-                        Console.WriteLine(Stringify.FrequencyMode(CommitCounter.FrequencyMode(log)));
-
-                    }
-                    else if (o.AnalysisMode == "author")
-                    {
-                        var repository = new Repository(repoPath);
-                        var log = repository.Commits;
-                        Console.WriteLine(Stringify.AuthorMode(CommitCounter.AuthorMode(log)));
-                    }
-                });
+        Parser.Default.ParseArguments<Options>(args).WithParsed<Options>(o =>
+        {
+            string repoPath = o.RepositoryPath is null ? Directory.GetCurrentDirectory() : o.RepositoryPath;
+            var repository = new Repository(repoPath);
+            var log = repository.Commits;
+            string output = "";
+            if (o.AnalysisMode == "frequency")
+            {
+                output = Stringify.FrequencyMode(CommitCounter.FrequencyMode(log));
+            }
+            else if (o.AnalysisMode == "author")
+            {
+                output = Stringify.AuthorMode(CommitCounter.AuthorMode(log));
+            }
+            Console.WriteLine(output);
+        });
     }
 }

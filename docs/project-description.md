@@ -6,12 +6,12 @@ For example, on GitHub you get some of the following visualizations for your rep
 
 <table>
     <tr>
-        <td><a href="https://github.com/apache/airflow/graphs/contributors"><img src="images/contributors_airflow.png" width="100%"></a></td>
-        <td><a href="https://github.com/apache/airflow/graphs/commit-activity"><img src="images/commits_airflow.png" width="100%"></a></td>
+        <td><a href="https://github.com/apache/airflow/graphs/contributors"><img src="../images/contributors_airflow.png" width="100%"></a></td>
+        <td><a href="https://github.com/apache/airflow/graphs/commit-activity"><img src="../images/commits_airflow.png" width="100%"></a></td>
     </tr>
     <tr>
-        <td><a href="https://github.com/apache/airflow/graphs/code-frequency"><img src="images/code_freq_airflow.png" width="100%"></a></td>
-        <td><a href="https://github.com/apache/airflow/network/members"><img src="images/forks_airflow.png" width="100%"></a></td>
+        <td><a href="https://github.com/apache/airflow/graphs/code-frequency"><img src="../images/code_freq_airflow.png" width="100%"></a></td>
+        <td><a href="https://github.com/apache/airflow/network/members"><img src="../images/forks_airflow.png" width="100%"></a></td>
     </tr>
 </table>
 

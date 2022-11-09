@@ -44,6 +44,7 @@ public sealed class LibGitService
     /// Gets the commit data from the given repository,
     /// and converts it into data transfer objects for storage in the database.
     /// </summary>
+    /// <param name="repo">The repository as an instance of LibGit2Sharp.Repository</param>
     public (HashSet<CommitCreateDTO> commits, string latestCommitHash) GetRepoCommits(Repository repo)
     {
         var commitLog = repo.Commits;

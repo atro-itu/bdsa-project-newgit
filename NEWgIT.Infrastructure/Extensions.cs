@@ -2,7 +2,7 @@ namespace NEWgIT;
 
 public static class Extensions
 {
-    public static void Seed(this Repository repo)
+    public static Repository Seed(this Repository repo)
     {
 
         CommitOptions opts = new CommitOptions { AllowEmptyCommit = true };
@@ -22,5 +22,6 @@ public static class Extensions
         // Trøstrup commits - 1 25/5/19 - 1 26/5/19
         repo.Commit("Jeg kan godt lide smølfer OwO", new Signature("Trøstrup", "frepe@gmail.com", new DateTime(2010, 05, 25)), new Signature("Trøstrup", "frepe@gmail.com", new DateTime(2010, 05, 25)), options: opts);
         repo.Commit("Jeg synes de er tihi", new Signature("Trøstrup", "frepe@gmail.com", new DateTime(2010, 05, 26)), new Signature("Trøstrup", "frepe@gmail.com", new DateTime(2010, 05, 26)), options: opts);
+        return repo;
     }
 }

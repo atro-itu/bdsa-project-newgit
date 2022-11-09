@@ -2,7 +2,7 @@ namespace NEWgIT.Core;
 
 public record AnalysisDTO(int Id, string repoName, string LatestCommitHash);
 
-public record AnalysisCreateDTO(string repoIdentifier);
+public record AnalysisCreateDTO(string repoIdentifier, ICollection<CommitCreateDTO> commits, string latestCommitHash);
 
 public record AnalysisUpdateDTO(int Id, string repoName, string LatestCommitHash);
 

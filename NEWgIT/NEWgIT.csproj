@@ -19,5 +19,5 @@
     <ProjectReference Include="..\NEWgIT.Infrastructure\NEWgIT.Infrastructure.csproj" />
     <ProjectReference Include="..\NEWgIT.Core\NEWgIT.Core.csproj" />
   </ItemGroup>
-
+<!-- Joh 17:25 - Retfærdige fader, verden har ikke kendt dig, men jeg har kendt dig, og de har erkendt, at du har udsendt mig -->
 </Project>

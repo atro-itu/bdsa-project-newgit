@@ -2,19 +2,27 @@ namespace NEWgIT.Infrastructure;
 
 public class CommitInfo
 {
-    public int Id;
+    public int Id { get; set; }
 
     [StringLength(100)]
-    public string Author;
+    [Required]
+    public string Author { get; set; }
 
-    public DateTime Date;
+    [Required]
+    public DateTime Date { get; set; }
 
-    public Analysis Analysis = null!;
+    public Analysis Analysis { get; set; } = null!;
 
     public CommitInfo(string author, DateTime date)
     {
         Author = author;
         Date = date;
     }
+
+    // public CommitInfo(LibGit2Sharp.Commit commit)
+    // {
+    //     Author = commit.Author.Name;
+    //     Date = commit.Committer.When.DateTime;
+    // }
 }
 

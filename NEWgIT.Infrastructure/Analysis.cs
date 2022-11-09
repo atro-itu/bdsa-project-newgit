@@ -10,10 +10,10 @@ public class Analysis
 
     public ICollection<CommitInfo> Commits { get; set; }
 
-    public Analysis(string repoIdentifier, ICollection<CommitInfo> commits, string latestCommitHash)
+    public Analysis(string repoIdentifier, string latestCommitHash)
     {
         RepoIdentifier = repoIdentifier;
-        Commits = commits;
+        Commits = new HashSet<CommitInfo>();
         LatestCommitHash = latestCommitHash;
     }
 }

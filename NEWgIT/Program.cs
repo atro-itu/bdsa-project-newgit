@@ -23,6 +23,8 @@ public class Program
             .WithParsed<Options>(o =>
                 {
                     string repoPath = o.RepositoryPath is null ? Directory.GetCurrentDirectory() : o.RepositoryPath;
+                    // var context = GitContextFactory.CreateDbContext();
+
                     /*
                     (response, id) = AnalysisRepo.find(new DTO(repoPath))
                     if resposnse = not found

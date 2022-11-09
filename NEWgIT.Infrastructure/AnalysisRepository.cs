@@ -32,10 +32,14 @@ public class AnalysisRepository : IAnalysisRepository
 
         if (conflicts.Any()) return (Response.Conflict, conflicts.First().Id);
 
-        string pathForAnalysis = $"https://github.com/{analysisDTO.repoIdentifier}";
-        (ICollection<CommitInfo> log, string latestCommitHash) = FetchRepositoryInfo(pathForAnalysis);
+        // map each dto to commitinfo object
+        ICollection<CommitInfo> commits = analysisDTO.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date)).ToHashSet();
 
-        var analysis = new Analysis(analysisDTO.repoIdentifier, log, latestCommitHash);
+        var analysis = new Analysis(
+            repoIdentifier: analysisDTO.repoIdentifier,
+            latestCommitHash: analysisDTO.latestCommitHash
+        );
+        analysis.Commits = commits;
 
         _context.Analysis.Add(analysis);
         _context.SaveChanges();
@@ -52,7 +56,6 @@ public class AnalysisRepository : IAnalysisRepository
             select new AnalysisDTO(a.Id, a.RepoIdentifier, a.LatestCommitHash);
 
         return Analysis.ToArray();
-
     }
 
     public AnalysisDTO Find(int ID)
@@ -100,14 +103,5 @@ public class AnalysisRepository : IAnalysisRepository
     public Response Delete(AnalysisDeleteDTO analysis)
     {
         throw new NotImplementedException();
-    }
-
-    private (ICollection<CommitInfo>, string latestCommitHash) FetchRepositoryInfo(string path)
-    {
-        var libgitRepository = new Repository(path);
-        var commitLog = libgitRepository.Commits;
-        var latestCommitHash = commitLog.First().Sha;
-        var commitInfoList = commitLog.Select(commit => new CommitInfo(commit.Author.Name, commit.Committer.When.DateTime)).ToHashSet();
-        return (commitInfoList, latestCommitHash);
     }
 }

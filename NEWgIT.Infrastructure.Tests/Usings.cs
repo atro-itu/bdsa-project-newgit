@@ -5,3 +5,4 @@ global using Microsoft.Data.Sqlite;
 global using Xunit;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Design;
+global using FluentAssertions;

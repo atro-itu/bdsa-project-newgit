@@ -10,29 +10,13 @@ public class AnalysisRepository : IAnalysisRepository
         _context = context;
     }
 
-    /*
-    UpdateOrCreate? or Find?
-    public response, analysisid FindOrCreate(createDTO? maybe findDTO?)
-    {
-        find analysis in context
-        or
-        create table from dto
-        then
-        init libgit repo from analysis path
-        for each commit => create object or find in db.. by hash?
-        find newest commit => save as newest in table
-
-    }
-    */
-
-
     public (Response Response, int AnalysisId) Create(AnalysisCreateDTO analysisDTO)
     {
         var conflicts = _context.Analysis.Where(analysis => analysis.RepoIdentifier == analysisDTO.repoIdentifier);
 
         if (conflicts.Any()) return (Response.Conflict, conflicts.First().Id);
 
-        // map each dto to commitinfo object
+        // map each dto to commitinfo object, as this is our model
         ICollection<CommitInfo> commits = analysisDTO.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date, hash: dto.hash)).ToHashSet();
 
         var analysis = new Analysis(
@@ -56,6 +40,8 @@ public class AnalysisRepository : IAnalysisRepository
             select new AnalysisDTO(a.Id, a.RepoIdentifier, a.LatestCommitHash);
 
         return Analysis.ToArray();
+
+        // use LINQ instead probably
     }
 
     public AnalysisDTO Find(int ID)
@@ -66,38 +52,22 @@ public class AnalysisRepository : IAnalysisRepository
             select new AnalysisDTO(a.Id, a.RepoIdentifier, a.LatestCommitHash);
 
         return Analysis.FirstOrDefault()!;
+
+        // use LINQ instead probably
     }
 
-    public Response Update(AnalysisUpdateDTO analysis)
+    public Response Update(AnalysisUpdateDTO analysisDTO)
     {
-        var Analysis = _context.Analysis.Find(analysis.Id);
-        if (Analysis is null)
-        {
-            return Response.NotFound;
-        }
-        else if (_context.Analysis.FirstOrDefault(a =>
-                                                    a.Id != analysis.Id
-                                                 && a.RepoIdentifier != analysis.repoName
-                                                 && a.LatestCommitHash != analysis.LatestCommitHash) != null)
-        {
-            return Response.Conflict;
-        }
-        else
-        {
-            /*
-            Analysis.Commits.Clear()
-            libgitCommits = new Repository(dto.RepoPath).GetCommits
-            commitInfoList = libgitCommits.each => new CommitInfo(message, signature)
-            Analysis.Commits = commitInfoList
-            Analysis.LatestCommitHash = Commits.Latest
-            */
-            Analysis.Commits.Clear();
-            var libgiCommits = new Repository().Commits;
-            var commitInfoList = libgiCommits.Select(commit => new CommitInfo(commit.Author.Name, commit.Committer.When.DateTime, commit.Sha));
-            Analysis.Commits = commitInfoList.ToHashSet();
-            _context.SaveChanges();
-            return Response.Updated;
-        }
+        // var analysis = _context.Analysis.Find(analysisDTO.Id);
+
+        // if (analysis == null) return Response.NotFound;
+
+        // override the commits from the dto to the analysis
+        // something like:
+        // analysis.Commits = analysisDTO.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date, hash: dto.hash)).ToHashSet();
+        // set the other properties
+
+        throw new NotImplementedException();
     }
 
     public Response Delete(AnalysisDeleteDTO analysis)

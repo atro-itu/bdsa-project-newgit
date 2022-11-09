@@ -11,7 +11,6 @@ public class CommitCounterTests : IDisposable
 
         Repository.Init(_path);
         _repository = new Repository(_path);
-
         _repository.Seed();
     }
 

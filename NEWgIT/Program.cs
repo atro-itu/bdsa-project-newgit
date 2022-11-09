@@ -39,12 +39,12 @@ public class Program
 
                     if (o.AnalysisMode == "frequency")
                     {
-                        Console.WriteLine(Stringify.FrequencyMode(CommitCounter.FrequencyMode(somethingFromDatabase)));
+                        // Console.WriteLine(Stringify.FrequencyMode(CommitCounter.FrequencyMode(somethingFromDatabase)));
 
                     }
                     else if (o.AnalysisMode == "author")
                     {
-                        Console.WriteLine(Stringify.AuthorMode(CommitCounter.AuthorMode(log)));
+                        // Console.WriteLine(Stringify.AuthorMode(CommitCounter.AuthorMode(log)));
                     }
                 });
     }

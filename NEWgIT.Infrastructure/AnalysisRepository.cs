@@ -90,10 +90,8 @@ public class AnalysisRepository : IAnalysisRepository
             */
             Analysis.Commits.Clear();
             var libgiCommits = new Repository().Commits;
-            Analysis.Id = analysis.Id;
-            var commitInfoList = libgiCommits.Select(commit => new CommitInfo()
-            Analysis.Commits = commitInfoList;
-
+            var commitInfoList = libgiCommits.Select(commit => new CommitInfo(commit.Author.Name, commit.Committer.When.DateTime));
+            Analysis.Commits = commitInfoList.ToHashSet();
             _context.SaveChanges();
             return Response.Updated;
         }

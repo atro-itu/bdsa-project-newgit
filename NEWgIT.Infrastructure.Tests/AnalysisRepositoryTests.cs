@@ -29,12 +29,13 @@ public class AnalysisRepositoryTests : IDisposable
     public void Dispose()
     {
         _context.Dispose();
+        _gitRepository.Dispose();
         Directory.Delete(_path, true);
     }
 
 
     [Fact]
-    public void Creates_Analysis()
+    public void Create_Given_AnalysisCreateDTO_Creates_Analysis()
     {
         // Arrange
         var (commitDTOs, hash) = LibGitService.Instance.GetRepoCommits(_gitRepository);

@@ -36,7 +36,7 @@ public sealed class LibGitService
         var latestCommitHash = commitLog.First().Sha;
         var commitDTOs = commitLog.Select(commit =>
             {
-                return new CommitCreateDTO(commit.Author.Name, commit.Committer.When.DateTime);
+                return new CommitCreateDTO(commit.Author.Name, commit.Committer.When.DateTime, commit.Sha);
             }).ToHashSet();
 
         return (commitDTOs, latestCommitHash);

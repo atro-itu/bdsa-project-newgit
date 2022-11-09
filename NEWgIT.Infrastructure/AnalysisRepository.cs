@@ -33,7 +33,7 @@ public class AnalysisRepository : IAnalysisRepository
         if (conflicts.Any()) return (Response.Conflict, conflicts.First().Id);
 
         // map each dto to commitinfo object
-        ICollection<CommitInfo> commits = analysisDTO.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date)).ToHashSet();
+        ICollection<CommitInfo> commits = analysisDTO.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date, hash: dto.hash)).ToHashSet();
 
         var analysis = new Analysis(
             repoIdentifier: analysisDTO.repoIdentifier,
@@ -93,7 +93,7 @@ public class AnalysisRepository : IAnalysisRepository
             */
             Analysis.Commits.Clear();
             var libgiCommits = new Repository().Commits;
-            var commitInfoList = libgiCommits.Select(commit => new CommitInfo(commit.Author.Name, commit.Committer.When.DateTime));
+            var commitInfoList = libgiCommits.Select(commit => new CommitInfo(commit.Author.Name, commit.Committer.When.DateTime, commit.Sha));
             Analysis.Commits = commitInfoList.ToHashSet();
             _context.SaveChanges();
             return Response.Updated;

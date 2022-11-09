@@ -8,21 +8,20 @@ public class CommitInfo
     [Required]
     public string Author { get; set; }
 
+    [StringLength(40)]
+    [Required]
+    public string Hash { get; set; }
+
     [Required]
     public DateTime Date { get; set; }
 
     public Analysis Analysis { get; set; } = null!;
 
-    public CommitInfo(string author, DateTime date)
+    public CommitInfo(string author, DateTime date, string hash)
     {
         Author = author;
         Date = date;
+        Hash = hash;
     }
-
-    // public CommitInfo(LibGit2Sharp.Commit commit)
-    // {
-    //     Author = commit.Author.Name;
-    //     Date = commit.Committer.When.DateTime;
-    // }
 }
 

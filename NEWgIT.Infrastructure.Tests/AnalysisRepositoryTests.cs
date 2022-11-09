@@ -38,17 +38,10 @@ public class AnalysisRepositoryTests : IDisposable
     {
         // Arrange
         var (commitDTOs, hash) = LibGitService.Instance.GetRepoCommits(_gitRepository);
-        ICollection<CommitInfo> expectedCommits = _gitRepository.Commits.Select(commit => new CommitInfo(author: commit.Author.Name, date: commit.Committer.When.DateTime)).ToHashSet();
-
-        var expectedAnalysis = new Analysis
-        (
-            repoIdentifier: _path,
-            latestCommitHash: hash
-        );
+        ICollection<CommitInfo> expectedCommits = _gitRepository.Commits.Select(commit => new CommitInfo(author: commit.Author.Name, date: commit.Committer.When.DateTime, hash: commit.Sha)).ToHashSet();
 
         var expectedIdentifier = _path;
         var expectedHash = hash;
-        // expectedAnalysis.Commits = expectedCommits;
 
         // Act
         var (response, id) = _analysisRepository.Create(new AnalysisCreateDTO(

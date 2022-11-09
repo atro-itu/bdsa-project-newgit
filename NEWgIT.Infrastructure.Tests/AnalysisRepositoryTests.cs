@@ -38,7 +38,7 @@ public class AnalysisRepositoryTests : IDisposable
     public void Create_Given_AnalysisCreateDTO_Creates_Analysis()
     {
         // Arrange
-        var (commitDTOs, hash) = LibGitService.Instance.GetRepoCommits(_gitRepository);
+        var (commitDTOs, hash) = CommitFetcherService.Instance.GetRepoCommits(_gitRepository);
         ICollection<CommitInfo> expectedCommits = _gitRepository.Commits.Select(commit => new CommitInfo(author: commit.Author.Name, date: commit.Committer.When.DateTime, hash: commit.Sha)).ToHashSet();
 
         var expectedIdentifier = _path;

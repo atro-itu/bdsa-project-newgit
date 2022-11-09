@@ -2,11 +2,11 @@ namespace NEWgIT.Core.Tests;
 
 public class LibGitServiceTests
 {
-    LibGitService _service;
+    CommitFetcherService _service;
 
     public LibGitServiceTests()
     {
-        _service = LibGitService.Instance;
+        _service = CommitFetcherService.Instance;
     }
 
     [Fact]

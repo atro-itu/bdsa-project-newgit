@@ -1,6 +1,6 @@
 namespace NEWgIT;
 
-public static class Extensions
+public static class RepositoryExtensions
 {
     /// <summary>
     /// Seeds the git repository object with 10 commits.

@@ -6,19 +6,19 @@ using LibGit2Sharp;
 /// A service that handles fetching the commit data from a git repository,
 /// and converting it into data transfer objects for storage in the database.
 /// </summary>
-public sealed class LibGitService
+public sealed class CommitFetcherService
 {
-    private static LibGitService instance = null!;
+    private static CommitFetcherService instance = null!;
 
-    private LibGitService() { }
+    private CommitFetcherService() { }
 
-    public static LibGitService Instance
+    public static CommitFetcherService Instance
     {
         get
         {
             if (instance == null)
             {
-                instance = new LibGitService();
+                instance = new CommitFetcherService();
             }
             return instance;
         }
@@ -29,7 +29,7 @@ public sealed class LibGitService
     /// and gets the commit data from the repository.
     /// Deletes the repository after getting the commit data.
     /// </summary>
-    /// <param name="path">The URL of the git repository.</param>
+    /// <param name="sourceUrl">The URL of the git repository.</param>
     public (HashSet<CommitCreateDTO> commits, string latestCommitHash) GetRepoCommits(string sourceUrl)
     {
         Repository.Clone(sourceUrl, "./temp/target");

@@ -18,21 +18,36 @@ public class Program
 
     public static void Main(string[] args)
     {
-        Parser.Default.ParseArguments<Options>(args).WithParsed<Options>(o =>
-        {
-            string repoPath = o.RepositoryPath is null ? Directory.GetCurrentDirectory() : o.RepositoryPath;
-            var repository = new Repository(repoPath);
-            var log = repository.Commits;
-            string output = "";
-            if (o.AnalysisMode == "frequency")
-            {
-                output = Stringify.FrequencyMode(CommitCounter.FrequencyMode(log));
-            }
-            else if (o.AnalysisMode == "author")
-            {
-                output = Stringify.AuthorMode(CommitCounter.AuthorMode(log));
-            }
-            Console.WriteLine(output);
-        });
+        // create context from factory
+        Parser.Default.ParseArguments<Options>(args)
+            .WithParsed<Options>(o =>
+                {
+                    string repoPath = o.RepositoryPath is null ? Directory.GetCurrentDirectory() : o.RepositoryPath;
+                    // var context = GitContextFactory.CreateDbContext();
+
+                    /*
+                    (response, id) = AnalysisRepo.find(new DTO(repoPath))
+                    if resposnse = not found
+                        AnalysisRepo.Create(new CreateDTO(repoPath))
+                    */
+                    /*
+                    AnalysisRepo.UpdateCommits(new UpdateDTO(repoPath))
+                    commits = AnalysisRepo.ReadCommits(new DTO(RepoPath))
+                    */
+
+                    // var repository = new Repository(repoPath);
+                    // var log = repository.Commits;
+                    // to some repo
+
+                    if (o.AnalysisMode == "frequency")
+                    {
+                        // Console.WriteLine(Stringify.FrequencyMode(CommitCounter.FrequencyMode(somethingFromDatabase)));
+
+                    }
+                    else if (o.AnalysisMode == "author")
+                    {
+                        // Console.WriteLine(Stringify.AuthorMode(CommitCounter.AuthorMode(log)));
+                    }
+                });
     }
 }

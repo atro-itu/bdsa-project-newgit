@@ -18,34 +18,27 @@ public class Program
 
     public static void Main(string[] args)
     {
-        // create context from factory
+        var factory = new GitContextFactory();
+        var context = factory.CreateDbContext(null!);
+        var repository = new AnalysisRepository(context);
+
         Parser.Default.ParseArguments<Options>(args)
             .WithParsed<Options>(o =>
                 {
                     string repoPath = o.RepositoryPath is null ? Directory.GetCurrentDirectory() : o.RepositoryPath;
-                    // var context = GitContextFactory.CreateDbContext();
-
-                    /*
-                    (response, id) = AnalysisRepo.find(new DTO(repoPath))
-                    if resposnse = not found
-                        AnalysisRepo.Create(new CreateDTO(repoPath))
-                    */
-                    /*
-                    AnalysisRepo.UpdateCommits(new UpdateDTO(repoPath))
-                    commits = AnalysisRepo.ReadCommits(new DTO(RepoPath))
-                    */
-
-                    // var repository = new Repository(repoPath);
-                    // var log = repository.Commits;
-                    // to some repo
+                    var gitRepo = new Repository(repoPath);
+                    var (commitDTOs, hash) = CommitFetcherService.Instance.GetRepoCommits(gitRepo);
+                    repository.Create(new AnalysisCreateDTO("test/repo", commitDTOs, hash));
 
                     if (o.AnalysisMode == "frequency")
                     {
+                        Console.WriteLine("freq!");
                         // Console.WriteLine(Stringify.FrequencyMode(CommitCounter.FrequencyMode(somethingFromDatabase)));
 
                     }
                     else if (o.AnalysisMode == "author")
                     {
+                        Console.WriteLine("author!");
                         // Console.WriteLine(Stringify.AuthorMode(CommitCounter.AuthorMode(log)));
                     }
                 });

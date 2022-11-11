@@ -6,7 +6,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-// builder.Services.AddDbContext<GitContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("GitContext")));
+builder.Services.AddDbContext<GitContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Newgit")));
 builder.Services.AddScoped<IAnalysisRepository, AnalysisRepository>();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 

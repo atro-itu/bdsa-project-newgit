@@ -43,14 +43,16 @@ public class AnalysisController : ControllerBase
     // }
     [HttpPut]
     [Route("analysis/{repoOwner}/{repoName}")]
-    public string Update()
+    public string Update(string repoOwner, string repoName)
     {
+        // AnalysisUpdateDTO update = new AnalysisUpdateDTO{};
+        // Response response = _repository.Update(id: $"{repoOwner}/{repoName}");
         return "not implemented";
     }
 
     // [HttpDelete("{analysis}")]
     // [Route("analysis/{repoOwner}/{repoName}")]
-    // public string Delete() 
+    // public string Delete(string repoOwner, string repoName) 
     //          => _repository.Delete(analysis);
     //     return "not implemented yet";
 }

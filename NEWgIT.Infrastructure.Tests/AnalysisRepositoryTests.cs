@@ -58,4 +58,20 @@ public class AnalysisRepositoryTests : IDisposable
         analysis.LatestCommitHash.Should().Be(expectedHash);
         analysis.Commits.Count.Should().Be(expectedCommits.Count);
     }
+
+
+    // [Fact]
+    // public void Update_Given_New_Commits()
+    // {
+    //     // Arrange
+    //     AnalysisRepository repo = new AnalysisRepository();
+
+
+    //     var commitInfo = _gitRepository.Update(new AnalysisDTO())
+
+    //     // Act
+
+
+    //     // Assert
+    // }
 }

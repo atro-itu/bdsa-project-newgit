@@ -39,11 +39,12 @@ public class CommitCounterTests : IDisposable
     public void FrequencyByAuthor_Should_Return_Commit_Frequency_By_Author(string author, int[] expected)
     {
         //Arrange
-        var log = _repository.Commits;
+        var log = _repository.Commits.ToList();
+        var dtoLog = log.Select(c => new CommitDTO(0, c.Author.Name, c.Committer.When.Date, c.Sha));
         var Dates = new DateOnly[] { new DateOnly(2008, 02, 29), new DateOnly(2010, 5, 25), new DateOnly(2010, 5, 26), new DateOnly(2019, 5, 25), new DateOnly(2019, 5, 26) };
 
         //Act
-        var result = CommitCounter.FrequencyByAuthor(log, author);
+        var result = CommitCounter.FrequencyByAuthor(dtoLog, author);
 
         //Assert
         for (int i = 0; i < Dates.Length; i++)

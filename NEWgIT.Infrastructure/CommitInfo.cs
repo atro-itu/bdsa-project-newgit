@@ -20,7 +20,7 @@ public class CommitInfo
     public CommitInfo(string author, DateTime date, string hash)
     {
         Author = author;
-        Date = date;
+        Date = date.ToUniversalTime();
         Hash = hash;
     }
 }

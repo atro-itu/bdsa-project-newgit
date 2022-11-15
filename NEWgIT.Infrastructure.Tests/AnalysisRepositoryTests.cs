@@ -31,6 +31,7 @@ public class AnalysisRepositoryTests : IDisposable
         _context.Dispose();
         _gitRepository.Dispose();
         Directory.Delete(_path, true);
+        GC.SuppressFinalize(this);
     }
 
 

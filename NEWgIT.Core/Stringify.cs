@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace NEWgIT;
 
-public static class Stringify 
+public static class Stringify
 {
     public static string AuthorMode(Dictionary<string, Dictionary<DateOnly, int>> dictionary)
     {
@@ -11,7 +11,7 @@ public static class Stringify
         var sortedDictionary = new SortedDictionary<string, Dictionary<DateOnly, int>>(dictionary);
         foreach (var author in sortedDictionary)
         {
-            result.Append("\n").Append(author.Key);
+            result.Append('\n').Append(author.Key);
             result.Append(FrequencyMode(author.Value, "\t"));
         }
         return result.ToString();

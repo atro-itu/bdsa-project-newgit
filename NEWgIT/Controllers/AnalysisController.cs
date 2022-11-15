@@ -1,19 +1,15 @@
-namespace NEWgIT.Api.Controllers;
+namespace NEWgIT.Controllers;
 
-using System.Net;
-using System.Text;
 using NEWgIT.Core;
 
 [ApiController]
 [Route("[controller]")]
 public class AnalysisController : ControllerBase
 {
-    private readonly ILogger<AnalysisController> _logger;
     private readonly IAnalysisRepository _repository;
 
-    public AnalysisController(ILogger<AnalysisController> logger, IAnalysisRepository repository)
+    public AnalysisController(IAnalysisRepository repository)
     {
-        _logger = logger;
         _repository = repository;
     }
 

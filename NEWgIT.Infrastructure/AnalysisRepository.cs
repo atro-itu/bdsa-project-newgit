@@ -33,45 +33,44 @@ public class AnalysisRepository : IAnalysisRepository
         return (response, analysis.Id);
     }
 
-    public IReadOnlyCollection<AnalysisDTO> Read()
-    {
-        var Analysis =
-            from a in _context.Analysis
-            select new AnalysisDTO(a.Id, a.RepoIdentifier, a.LatestCommitHash);
+    public IReadOnlyCollection<AnalysisDTO> Read() =>
+        _context.Analysis.Select(analysis => new AnalysisDTO(analysis.Id, analysis.RepoIdentifier, analysis.LatestCommitHash))
+                          .ToArray();
 
-        return Analysis.ToArray();
 
-        // use LINQ instead probably
-    }
 
     public AnalysisDTO Find(int ID)
     {
-        var Analysis =
-            from a in _context.Analysis
-            where a.Id == ID
-            select new AnalysisDTO(a.Id, a.RepoIdentifier, a.LatestCommitHash);
-
-        return Analysis.FirstOrDefault()!;
-
-        // use LINQ instead probably
+        var analysis = _context.Analysis.Find(ID);
+        if (analysis == null) return null!; //Null is NOT Null!!!!!
+        return new AnalysisDTO(analysis.Id, analysis.RepoIdentifier, analysis.LatestCommitHash);
     }
 
     public Response Update(AnalysisUpdateDTO analysisDTO)
     {
-        // var analysis = _context.Analysis.Find(analysisDTO.Id);
+        var analysis = _context.Analysis.Find(analysisDTO.id);
+        Response response;
 
-        // if (analysis == null) return Response.NotFound;
+        if (analysis == null) return Response.NotFound;
 
-        // override the commits from the dto to the analysis
-        // something like:
-        // analysis.Commits = analysisDTO.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date, hash: dto.hash)).ToHashSet();
-        // set the other properties
+        analysis.Commits = analysisDTO.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date, hash: dto.hash)).ToHashSet();
+        analysis.LatestCommitHash = analysisDTO.latestCommitHash;
+        _context.SaveChanges();
+        response = Response.Updated;
 
-        throw new NotImplementedException();
+        return response;
+
     }
 
-    public Response Delete(AnalysisDeleteDTO analysis)
+    public Response Delete(AnalysisDeleteDTO analysisDTO)
     {
-        throw new NotImplementedException();
+        var analysis = _context.Analysis.Find(analysisDTO.id);
+
+        if (analysis is null) return Response.NotFound;
+
+        _context.Analysis.Remove(analysis);
+        _context.SaveChanges();
+        return Response.Deleted;
     }
 }
+

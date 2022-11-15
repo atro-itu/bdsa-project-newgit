@@ -30,29 +30,10 @@ public class AnalysisController : ControllerBase
         return JsonConvert.SerializeObject(analysis);
     }
 
-    // [HttpGet($"{repoName}", Name = "GetFrequencyAnalysis")]
-    // public IEnumerable<(DateOnly, int)> GetFrequency()
-    // {
-    //     return repoName;
-    // }
-
-    // [HttpGet(Name = "GetAuthorAnalysis")]
-    // public IEnumerable<(string, IEnumerable<(DateOnly, int)>)> GetAuthor()
-    // {
-    //     return null;
-    // }
     [HttpPut]
     [Route("analysis/{repoOwner}/{repoName}")]
     public string Update(string repoOwner, string repoName)
     {
-        // AnalysisUpdateDTO update = new AnalysisUpdateDTO{};
-        // Response response = _repository.Update(id: $"{repoOwner}/{repoName}");
         return "not implemented";
     }
-
-    // [HttpDelete("{analysis}")]
-    // [Route("analysis/{repoOwner}/{repoName}")]
-    // public string Delete(string repoOwner, string repoName) 
-    //          => _repository.Delete(analysis);
-    //     return "not implemented yet";
 }

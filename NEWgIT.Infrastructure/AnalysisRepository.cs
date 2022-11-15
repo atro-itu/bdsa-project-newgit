@@ -43,7 +43,7 @@ public class AnalysisRepository : IAnalysisRepository
     public AnalysisDTO Find(int ID)
     {
         var analysis = _context.Analysis.Find(ID);
-        if (analysis == null) return null!; //Null is NOT Null!!!!!
+        if (analysis == null) return null!;
         _context.Commits.Where(commit => commit.Analysis.Id == ID).Load();
         return new AnalysisDTO(analysis.Id, analysis.RepoIdentifier, GetCommitDTOs(analysis), analysis.LatestCommitHash);
     }
@@ -51,7 +51,7 @@ public class AnalysisRepository : IAnalysisRepository
     public AnalysisDTO FindByIdentifier(string repoIdentifier)
     {
         var analysis = _context.Analysis.Where(analysis => analysis.RepoIdentifier == repoIdentifier).FirstOrDefault();
-        if (analysis == null) return null!; //Null is NOT Null!!!!!
+        if (analysis == null) return null!;
         return Find(analysis.Id);
     }
 

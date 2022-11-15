@@ -1,11 +1,11 @@
 namespace NEWgIT.Core;
 
-public record AnalysisDTO(int id, string repoName, string latestCommitHash);
+public record AnalysisDTO(int id, string repoIdentifier, ICollection<CommitDTO> commits, string latestCommitHash);
 
 public record AnalysisCreateDTO(string repoIdentifier, ICollection<CommitCreateDTO> commits, string latestCommitHash);
 
-public record AnalysisUpdateDTO(int id, ICollection<CommitCreateDTO> commits, string latestCommitHash);
+public record AnalysisUpdateDTO(string repoIdentifier, ICollection<CommitCreateDTO> commits, string latestCommitHash);
 
-public record AnalysisDeleteDTO(int id);
+public record AnalysisDeleteDTO(string repoIdentifier);
 
 // details DTO - returns collection of commits?

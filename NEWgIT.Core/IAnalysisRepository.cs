@@ -6,6 +6,8 @@ public interface IAnalysisRepository
     IReadOnlyCollection<AnalysisDTO> Read();
     AnalysisDTO Find(int ID);
 
+    AnalysisDTO FindByIdentifier(string repoIdentifier);
+
     Response Update(AnalysisUpdateDTO analysis);
 
     Response Delete(AnalysisDeleteDTO analysis);

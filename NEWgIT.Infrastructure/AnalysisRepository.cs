@@ -34,8 +34,9 @@ public class AnalysisRepository : IAnalysisRepository
     }
 
     public IReadOnlyCollection<AnalysisDTO> Read() =>
-        _context.Analysis.Select(analysis => new AnalysisDTO(analysis.Id, analysis.RepoIdentifier, analysis.LatestCommitHash))
+        _context.Analysis.Select(analysis => new AnalysisDTO(analysis.Id, analysis.RepoIdentifier, GetCommitDTOs(analysis), analysis.LatestCommitHash))
                           .ToArray();
+
 
 
 
@@ -43,28 +44,34 @@ public class AnalysisRepository : IAnalysisRepository
     {
         var analysis = _context.Analysis.Find(ID);
         if (analysis == null) return null!; //Null is NOT Null!!!!!
-        return new AnalysisDTO(analysis.Id, analysis.RepoIdentifier, analysis.LatestCommitHash);
+        _context.Commits.Where(commit => commit.Analysis.Id == ID).Load();
+        return new AnalysisDTO(analysis.Id, analysis.RepoIdentifier, GetCommitDTOs(analysis), analysis.LatestCommitHash);
+    }
+
+    public AnalysisDTO FindByIdentifier(string repoIdentifier)
+    {
+        var analysis = _context.Analysis.Where(analysis => analysis.RepoIdentifier == repoIdentifier).FirstOrDefault();
+        if (analysis == null) return null!; //Null is NOT Null!!!!!
+        return Find(analysis.Id);
     }
 
     public Response Update(AnalysisUpdateDTO analysisDTO)
     {
-        var analysis = _context.Analysis.Find(analysisDTO.id);
-        Response response;
+        var analysis = _context.Analysis.FindByIdentifier(analysisDTO.repoIdentifier);
 
         if (analysis == null) return Response.NotFound;
-
+        if (analysis.LatestCommitHash == analysisDTO.latestCommitHash) return Response.NotModified;
+        analysis.Commits.Clear();
         analysis.Commits = analysisDTO.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date, hash: dto.hash)).ToHashSet();
         analysis.LatestCommitHash = analysisDTO.latestCommitHash;
         _context.SaveChanges();
-        response = Response.Updated;
 
-        return response;
-
+        return Response.Updated;
     }
 
     public Response Delete(AnalysisDeleteDTO analysisDTO)
     {
-        var analysis = _context.Analysis.Find(analysisDTO.id);
+        var analysis = _context.Analysis.FindByIdentifier(analysisDTO.repoIdentifier);
 
         if (analysis is null) return Response.NotFound;
 
@@ -72,5 +79,10 @@ public class AnalysisRepository : IAnalysisRepository
         _context.SaveChanges();
         return Response.Deleted;
     }
+
+    private ICollection<CommitDTO> GetCommitDTOs(Analysis analysis) => analysis
+        .Commits.Select(commit => new CommitDTO(
+            commit.Id, commit.Author, commit.Date, commit.Hash)
+        ).ToHashSet();
 }
 

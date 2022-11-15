@@ -1,18 +1,24 @@
-namespace NEWgIT;
+namespace NEWgIT.Core;
 
 public static class CommitCounter
 {
     public static Dictionary<DateOnly, int> FrequencyMode(ICommitLog log) =>
-        log.GroupBy(c => DateOnly.FromDateTime(c.Committer.When.Date))
-           .ToDictionary(g => g.Key, g => g.Count());
+         FrequencyMode(log.Select(c => new CommitDTO(0, c.Author.Name, c.Committer.When.Date, c.Sha)));
+    public static Dictionary<DateOnly, int> FrequencyMode(IEnumerable<CommitDTO> commits) =>
+         commits.GroupBy(c => DateOnly.FromDateTime(c.date.Date))
+            .ToDictionary(g => g.Key, g => g.Count());
 
     public static Dictionary<string, Dictionary<DateOnly, int>> AuthorMode(ICommitLog log) =>
-        log.DistinctBy(c => c.Author.Name)
-           .Select(c => c.Author.Name)
-           .ToDictionary(author => author, author => FrequencyByAuthor(log, author));
+      AuthorMode(log.Select(c => new CommitDTO(0, c.Author.Name, c.Committer.When.Date, c.Sha)));
+    public static Dictionary<string, Dictionary<DateOnly, int>> AuthorMode(IEnumerable<CommitDTO> commits) =>
+       commits.DistinctBy(c => c.author)
+          .Select(c => c.author)
+          .ToDictionary(author => author, author => FrequencyByAuthor(commits, author));
 
-    public static Dictionary<DateOnly, int> FrequencyByAuthor(ICommitLog log, string author) =>
-       log.Where(c => c.Author.Name == author)
-          .GroupBy(c => DateOnly.FromDateTime(c.Committer.When.Date))
+    public static Dictionary<DateOnly, int> FrequencyByAuthor(IEnumerable<CommitDTO> commits, string author) =>
+       commits.Where(c => c.author == author)
+          .GroupBy(c => DateOnly.FromDateTime(c.date.Date))
           .ToDictionary(g => g.Key, g => g.Count());
+
+
 }

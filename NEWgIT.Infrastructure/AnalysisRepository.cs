@@ -10,27 +10,27 @@ public class AnalysisRepository : IAnalysisRepository
         _context = context;
     }
 
-    public (Response Response, int AnalysisId) Create(AnalysisCreateDTO analysisDTO)
+    public (Response Response, int AnalysisId) Create(AnalysisCreateDTO analysis)
     {
-        var conflicts = _context.Analysis.Where(analysis => analysis.RepoIdentifier == analysisDTO.repoIdentifier);
+        var conflicts = _context.Analysis.Where(dbAnalysis => dbAnalysis.RepoIdentifier == analysis.repoIdentifier);
 
         if (conflicts.Any()) return (Response.Conflict, conflicts.First().Id);
 
         // map each dto to commitinfo object, as this is our model
-        ICollection<CommitInfo> commits = analysisDTO.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date, hash: dto.hash)).ToHashSet();
+        ICollection<CommitInfo> commits = analysis.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date, hash: dto.hash)).ToHashSet();
 
-        var analysis = new Analysis(
-            repoIdentifier: analysisDTO.repoIdentifier,
-            latestCommitHash: analysisDTO.latestCommitHash
+        var analysisObject = new Analysis(
+            repoIdentifier: analysis.repoIdentifier,
+            latestCommitHash: analysis.latestCommitHash
         );
-        analysis.Commits = commits;
+        analysisObject.Commits = commits;
 
-        _context.Analysis.Add(analysis);
+        _context.Analysis.Add(analysisObject);
         _context.SaveChanges();
 
         var response = Response.Created;
 
-        return (response, analysis.Id);
+        return (response, analysisObject.Id);
     }
 
     public IReadOnlyCollection<AnalysisDTO> Read() =>
@@ -55,32 +55,32 @@ public class AnalysisRepository : IAnalysisRepository
         return Find(analysis.Id);
     }
 
-    public Response Update(AnalysisUpdateDTO analysisDTO)
+    public Response Update(AnalysisUpdateDTO analysis)
     {
-        var analysis = _context.Analysis.FindByIdentifier(analysisDTO.repoIdentifier);
+        var analysisObject = _context.Analysis.FindByIdentifier(analysis.repoIdentifier);
 
-        if (analysis == null) return Response.NotFound;
-        if (analysis.LatestCommitHash == analysisDTO.latestCommitHash) return Response.NotModified;
-        analysis.Commits.Clear();
-        analysis.Commits = analysisDTO.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date, hash: dto.hash)).ToHashSet();
-        analysis.LatestCommitHash = analysisDTO.latestCommitHash;
+        if (analysisObject == null) return Response.NotFound;
+        if (analysisObject.LatestCommitHash == analysis.latestCommitHash) return Response.NotModified;
+        analysisObject.Commits.Clear();
+        analysisObject.Commits = analysis.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date, hash: dto.hash)).ToHashSet();
+        analysisObject.LatestCommitHash = analysis.latestCommitHash;
         _context.SaveChanges();
 
         return Response.Updated;
     }
 
-    public Response Delete(AnalysisDeleteDTO analysisDTO)
+    public Response Delete(AnalysisDeleteDTO analysis)
     {
-        var analysis = _context.Analysis.FindByIdentifier(analysisDTO.repoIdentifier);
+        var analysisObject = _context.Analysis.FindByIdentifier(analysis.repoIdentifier);
 
-        if (analysis is null) return Response.NotFound;
+        if (analysisObject is null) return Response.NotFound;
 
-        _context.Analysis.Remove(analysis);
+        _context.Analysis.Remove(analysisObject);
         _context.SaveChanges();
         return Response.Deleted;
     }
 
-    private ICollection<CommitDTO> GetCommitDTOs(Analysis analysis) => analysis
+    private static ICollection<CommitDTO> GetCommitDTOs(Analysis analysis) => analysis
         .Commits.Select(commit => new CommitDTO(
             commit.Id, commit.Author, commit.Date, commit.Hash)
         ).ToHashSet();

@@ -24,7 +24,7 @@ public class CommitCounterTests : IDisposable
         var result = CommitCounter.FrequencyMode(log);
 
         //Assert
-        result.Count().Should().Be(5);
+        result.Count.Should().Be(5);
         result[new DateOnly(2008, 02, 29)].Should().Be(3);
         result[new DateOnly(2010, 05, 25)].Should().Be(1);
         result[new DateOnly(2010, 05, 26)].Should().Be(1);
@@ -64,17 +64,17 @@ public class CommitCounterTests : IDisposable
         var result = CommitCounter.AuthorMode(log);
 
         //Assert
-        result.Count().Should().Be(3);
-        result["Lucas"].Count().Should().Be(2);
+        result.Count.Should().Be(3);
+        result["Lucas"].Count.Should().Be(2);
         result["Lucas"][new DateOnly(2008, 02, 29)].Should().Be(2);
         result["Lucas"][new DateOnly(2019, 5, 25)].Should().Be(2);
 
-        result["Bank"].Count().Should().Be(3);
+        result["Bank"].Count.Should().Be(3);
         result["Bank"][new DateOnly(2008, 02, 29)].Should().Be(1);
         result["Bank"][new DateOnly(2019, 5, 25)].Should().Be(1);
         result["Bank"][new DateOnly(2019, 5, 26)].Should().Be(2);
 
-        result["Trøstrup"].Count().Should().Be(2);
+        result["Trøstrup"].Count.Should().Be(2);
         result["Trøstrup"][new DateOnly(2010, 5, 25)].Should().Be(1);
         result["Trøstrup"][new DateOnly(2010, 5, 26)].Should().Be(1);
     }
@@ -83,5 +83,6 @@ public class CommitCounterTests : IDisposable
     {
         _repository.Dispose();
         Directory.Delete(_path, recursive: true);
+        GC.SuppressFinalize(this);
     }
 }

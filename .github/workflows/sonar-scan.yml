@@ -30,6 +30,8 @@ jobs:
           sonarProjectKey: duckth_bdsa-project-newgit
           sonarProjectName: bdsa-project-newgit
           sonarOrganization: duckth
+          dotnetTestArguments: --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
 
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

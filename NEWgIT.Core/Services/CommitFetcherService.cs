@@ -1,4 +1,4 @@
-namespace NEWgIT.Core;
+namespace NEWgIT.Core.Services;
 
 /// <summary>
 /// A service that handles fetching the commit data from a git repository,

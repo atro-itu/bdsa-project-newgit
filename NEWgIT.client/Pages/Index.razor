@@ -1,0 +1,28 @@
+﻿@page "/"
+@using Radzen
+@using System.Globalization
+@using NEWgIT
+
+<h1> Welcome to NEWgIT </h1>
+
+<p>Get github repository analysis with the identifier &lt;github-user&gt;/&lt;repo-name&gt; </p>
+
+  <RadzenCard>
+      <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Insert github identifier</RadzenText>
+      <RadzenTextBox Placeholder="Enter..." Change=@(args => OnChange(args, "TextBox with placeholder")) Class="w-100" />
+  </RadzenCard>
+
+ <RadzenButton Click=@(args => OnClick("Primary button")) Text="Analyze" ButtonStyle="ButtonStyle.Primary" />
+
+    @code {
+    string value;
+    string x; 
+    void OnChange(string value, string name)
+    {
+        x = value;
+    }
+    void OnClick(string buttonName)
+    {
+                
+    }
+}

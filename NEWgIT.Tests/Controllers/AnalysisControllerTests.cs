@@ -145,5 +145,33 @@ public class AnalysisControllerTests
         actual.Should().BeEquivalentTo(expected);
     }
 
-    
+    [Fact]
+    public void Delete_Should_Return_NotFound_Given_None_Existing_Repo()
+    {
+        // Arrange
+        var analysisDeleteDTO = new AnalysisDeleteDTO("duckth/testrepo");
+        _mockRepository.Delete(analysisDeleteDTO).Returns(Response.NotFound);
+        var expected = new NotFoundObjectResult(null);
+
+        // Act
+        var actual = _controller.Delete("duckth", "testrepo");
+
+        // Assert
+        actual.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void Delete_Should_Return_NoContentResult_Given_Existing_Repo()
+    {
+        // Arrange
+        var analysisDeleteDTO = new AnalysisDeleteDTO("duckth/testrepo");
+        _mockRepository.Delete(analysisDeleteDTO).Returns(Response.Deleted);
+        var expected = new NoContentResult();
+
+        // Act
+        var actual = _controller.Delete("duckth", "testrepo");
+
+        // Assert
+        actual.Should().BeEquivalentTo(expected);
+    }
 }

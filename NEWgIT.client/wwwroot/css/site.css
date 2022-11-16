@@ -62,3 +62,20 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+    .AnalyzeButton {
+        width: 30%;
+        margin-left: 35%; 
+        margin-top: 1%;
+    }
+    .prAuthorBox{
+        display: flex; 
+    }
+    .RadzenChartPrAuthor {
+        width: 50%;
+    }
+
+    .TextBox{
+        width: 50%;
+        margin-left: 25%; 
+    }

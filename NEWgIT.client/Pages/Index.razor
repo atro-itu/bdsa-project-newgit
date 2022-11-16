@@ -1,28 +1,196 @@
 ﻿@page "/"
 @using Radzen
 @using System.Globalization
-@using NEWgIT
+@using System;
+@using System.Collections.Generic;
+@using NEWgIT.Core;
+@using System.Text.Json
+@using System.Text.Json.Serialization
 
-<h1> Welcome to NEWgIT </h1>
+<RadzenText TextStyle="TextStyle.H2" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
+    Welcome to NEWgIT
+</RadzenText>
 
-<p>Get github repository analysis with the identifier &lt;github-user&gt;/&lt;repo-name&gt; </p>
+<RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3" TextAlign="TextAlign.Center"></RadzenText>
+<RadzenTextBox Placeholder="Insert github repository identifier" Change=@(args => OnChange(args, "TextBox with placeholder")) Class="TextBox" />
 
-  <RadzenCard>
-      <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Insert github identifier</RadzenText>
-      <RadzenTextBox Placeholder="Enter..." Change=@(args => OnChange(args, "TextBox with placeholder")) Class="w-100" />
-  </RadzenCard>
+ <RadzenButton class="AnalyzeButton" Click=@(args => OnClick("Primary button")) Text="Analyze" ButtonStyle="ButtonStyle.Primary"/>
 
- <RadzenButton Click=@(args => OnClick("Primary button")) Text="Analyze" ButtonStyle="ButtonStyle.Primary" />
+<RadzenText TextStyle="TextStyle.H4" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
+    Commit Frequency
+</RadzenText>
+
+<RadzenChart>
+        <RadzenLineSeries Smooth="false" Data="@allCommits" CategoryProperty="Date" ValueProperty="Commits" Title="All Commits">
+        </RadzenLineSeries>
+                <RadzenCategoryAxis Visible="false"/>
+            <RadzenValueAxis>
+        <RadzenGridLines Visible="true" />
+    </RadzenValueAxis>
+</RadzenChart>
+
+<RadzenText TextStyle="TextStyle.H4" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
+    Commit Frequency pr author
+</RadzenText>
+
+@for(var num = 0; num < authors.Length; num+=2)
+{   
+    if(num==authors.Length-1){
+        var authorOne = authors[num];
+        <div class="prAuthorBox">
+<RadzenChart class="RadzenChartPrAuthor">
+        <RadzenLineSeries Smooth="false" Data="@allCommits" CategoryProperty="Date" Title="@authorOne" ValueProperty="Commits">
+        </RadzenLineSeries>
+    <RadzenCategoryAxis Visible="false"/>
+        <RadzenValueAxis Formatter="@Commits">
+        <RadzenGridLines Visible="true" />
+    </RadzenValueAxis>
+</RadzenChart>
+</div>
+    }else{
+    var authorOne = authors[num];
+    var authorTwo = authors[num+1];
+<div class="prAuthorBox">
+<RadzenChart class="RadzenChartPrAuthor">
+        <RadzenLineSeries Smooth="false" Data="@allCommits" CategoryProperty="Date" Title="@authorOne" ValueProperty="Commits">
+        </RadzenLineSeries>
+    <RadzenCategoryAxis Visible="false"/>
+        <RadzenValueAxis Formatter="@Commits">
+        <RadzenGridLines Visible="true" />
+    </RadzenValueAxis>
+</RadzenChart>
+<RadzenChart class="RadzenChartPrAuthor">
+        <RadzenLineSeries Smooth="false" Data="@allCommits" CategoryProperty="Date" Title="@authorTwo" ValueProperty="Commits">
+        </RadzenLineSeries>
+    <RadzenCategoryAxis Visible="false"/>
+        <RadzenValueAxis Formatter="@Commits">
+        <RadzenGridLines Visible="true" />
+    </RadzenValueAxis>
+</RadzenChart>
+</div>
+    }
+}
+
 
     @code {
     string value;
-    string x; 
+    string repoIdentifier; 
+    HashSet<CommitCreateDTO> allCommitsx = new HashSet<CommitCreateDTO>
+    {
+    };
+
     void OnChange(string value, string name)
     {
-        x = value;
+        this.value = value;
     }
     void OnClick(string buttonName)
     {
-                
+        repoIdentifier = value;
+        //AllCommitsx = getCommits...
+        
     }
+
+    class commitItem
+    {
+        public string Date { get; set; }
+        public double Commits { get; set; }
+    }
+
+    string Commits(object value)
+    {
+        return ((double)value).ToString();
+    }
+
+    String[] authors = new String[]{
+        "Frederik", "Trøstrup", "Dependabot", "Bank", "Lucas", "Felix"
+    };
+    
+    commitItem[] allCommits = new commitItem[] {
+        new commitItem
+        {
+            Date = ("13/01"),
+            Commits = 1
+        },
+        new commitItem
+        {
+            Date = ("03/02"),
+            Commits = 12
+        },
+        new commitItem
+        {
+            Date = ("08/03"),
+            Commits = 30
+        },
+        new commitItem
+        {
+            Date = ("9/04"),
+            Commits = 19
+        },
+        new commitItem
+        {
+            Date = ("10/05"),
+            Commits = 22
+        },
+        new commitItem
+        {
+            Date = ("11/06"),
+            Commits = 2
+        },
+        new commitItem
+        {
+            Date = ("12/07"),
+            Commits = 7
+        },
+        new commitItem
+        {
+            Date = ("13/08"),
+            Commits = 9
+        },
+        new commitItem
+        {
+            Date = ("14/09"),
+            Commits = 0
+        },
+        new commitItem
+        {
+            Date = ("15/10"),
+            Commits = 1
+        },
+        new commitItem
+        {
+            Date = ("16/11"),
+            Commits = 3
+        },
+        new commitItem
+        {
+            Date = ("17/12"),
+            Commits = 11
+        },
+        new commitItem
+        {
+            Date = ("018/12"),
+            Commits = 33
+        },
+        new commitItem
+        {
+            Date = ("19/12"),
+            Commits = 2
+        },
+        new commitItem
+        {
+            Date = ("20/12"),
+            Commits = 7
+        },
+        new commitItem
+        {
+            Date = ("21/12"),
+            Commits = 19
+        },
+        new commitItem
+        {
+            Date = ("22/12"),
+            Commits = 22
+        },
+    };
+    
 }

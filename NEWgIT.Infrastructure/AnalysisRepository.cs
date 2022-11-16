@@ -60,7 +60,8 @@ public class AnalysisRepository : IAnalysisRepository
         var analysisObject = _context.Analysis.FindByIdentifier(analysis.repoIdentifier);
 
         if (analysisObject == null) return Response.NotFound;
-        if (analysisObject.LatestCommitHash == analysis.latestCommitHash) return Response.NotModified;
+        if (analysisObject.LatestCommitHash == analysis.latestCommitHash) return Response.Ok;
+
         analysisObject.Commits.Clear();
         analysisObject.Commits = analysis.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date, hash: dto.hash)).ToHashSet();
         analysisObject.LatestCommitHash = analysis.latestCommitHash;

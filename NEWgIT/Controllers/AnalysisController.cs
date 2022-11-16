@@ -23,6 +23,7 @@ public class AnalysisController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{repoOwner}/{repoName}")]
     [Route("{repoOwner}/{repoName}/frequency")]
     public ActionResult<string> GetFrequencyMode(string repoOwner, string repoName)
     {
@@ -54,9 +55,9 @@ public class AnalysisController : ControllerBase
 
     [HttpGet]
     [Route("{repoOwner}/{repoName}/forks")]
-    public async Task<ActionResult<string>> GetForkMode(string repoOwner, string repoName)
+    public ActionResult<string> GetForkMode(string repoOwner, string repoName)
     {
-        var output = await _forkFetcherService.FetchForks(repoOwner, repoName);
+        var output = JsonConvert.SerializeObject(_forkFetcherService.FetchForks(repoOwner, repoName).Result);
 
         return new OkObjectResult(output)
         {

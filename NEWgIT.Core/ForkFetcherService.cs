@@ -28,7 +28,7 @@ public class ForkFetcherService
         var repoParts = repoIdentifier.Split('/');
         var repoOwner = repoParts[0];
         var repoName = repoParts[1];
-        return await instance.FetchForks(repoOwner, repoName);
+        return await FetchForks(repoOwner, repoName);
 
     }
 

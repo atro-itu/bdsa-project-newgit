@@ -4,7 +4,7 @@ namespace NEWgIT.Core;
 /// A service that handles fetching the commit data from a git repository,
 /// and converting it into data transfer objects for storage in the database.
 /// </summary>
-public sealed class CommitFetcherService
+public sealed class CommitFetcherService : ICommitFetcherService
 {
     private static CommitFetcherService instance = null!;
 

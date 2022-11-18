@@ -9,6 +9,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<GitContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("Newgit")!));
 
 builder.Services.AddScoped<IAnalysisRepository, AnalysisRepository>();
+builder.Services.AddSingleton<ICommitFetcherService, CommitFetcherService>(service => CommitFetcherService.Instance);
+builder.Services.AddSingleton<IForkFetcherService, ForkFetcherService>(service => ForkFetcherService.Instance);
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 var app = builder.Build();
 

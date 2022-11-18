@@ -5,23 +5,27 @@ using System.Collections.Generic;
 using NEWgIT.Controllers;
 using NSubstitute;
 using NEWgIT.Core;
+using NEWgIT.Core.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 
 public class AnalysisControllerTests
 {
     private readonly AnalysisController _controller;
-    private IAnalysisRepository _mockRepository;
-    private ICommitFetcherService _mockCommitFetcherService;
+    private readonly IAnalysisRepository _mockRepository;
+    private readonly ICommitFetcherService _mockCommitFetcherService;
+    private readonly IForkFetcherService _mockForkFetcherService;
+
     public AnalysisControllerTests()
     {
         _mockRepository = Substitute.For<IAnalysisRepository>();
         _mockCommitFetcherService = Substitute.For<ICommitFetcherService>();
-        _controller = new AnalysisController(_mockRepository);
+        _mockForkFetcherService = Substitute.For<IForkFetcherService>();
+        _controller = new AnalysisController(_mockRepository, _mockCommitFetcherService, _mockForkFetcherService);
     }
 
     [Fact]
-    public void Get_Should_Return_Repo_As_AuthorMode_Given_RepoIdentifier()
+    public void GetAuthorMode_Should_Return_Repo_As_AuthorMode_Given_RepoIdentifier()
     {
         // Arrange
         List<CommitDTO> commitDTO = new List<CommitDTO>()
@@ -37,7 +41,7 @@ public class AnalysisControllerTests
         };
 
         // Act
-        var actual = _controller.Get("duckth", "testrepo").Result;
+        var actual = _controller.GetAuthorMode("duckth", "testrepo").Result;
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -45,7 +49,7 @@ public class AnalysisControllerTests
     }
 
     [Fact]
-    public void Get_Should_Return_Repo_As_FrequencyMode_Given_RepoIdentifier_And_FrequencyMode_String()
+    public void GetFrequencyMode_Should_Return_Repo_As_FrequencyMode_Given_RepoIdentifier()
     {
         // Arrange
         List<CommitDTO> commitDTO = new List<CommitDTO>()
@@ -61,41 +65,53 @@ public class AnalysisControllerTests
         };
 
         // Act
-        var actual = _controller.Get("duckth", "testrepo", "frequency").Result;
+        var actual = _controller.GetFrequencyMode("duckth", "testrepo").Result;
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
     }
 
     [Fact]
-    public void Get_Should_Return_NotFoundObjectResult_Given_None_Existing_Repo()
+    public void GetForkMode_Should_Return_Forks_Of_Repo()
+    {
+        // Arrange
+        var forks = new HashSet<string>() { "someone/testrepo", "sometwo/testrepo" };
+        _mockForkFetcherService.FetchForks("duckth", "testrepo").Returns(forks);
+        var expected = new OkObjectResult("[\"someone/testrepo\",\"sometwo/testrepo\"]")
+        {
+            ContentTypes = { "application/json" }
+        };
+
+        // Act
+        var actual = _controller.GetForkMode("duckth", "testrepo").Result;
+
+        // Assert
+        actual.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void GetAuthor_Should_Return_NotFoundObjectResult_Given_None_Existing_Repo()
     {
         // Arrange
         _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(i => null!); // (i => null!) is a hack to make it compile
         var expected = new NotFoundObjectResult(null);
 
         // Act
-        var actual = _controller.Get("duckth", "testrepo").Result;
+        var actual = _controller.GetAuthorMode("duckth", "testrepo").Result;
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
     }
 
     [Fact]
-    public void Get_Should_Return_BadRequestObjectResult_Given_IncorrectString()
+    public void GetFrequency_Should_Return_NotFoundObjectResult_Given_None_Existing_Repo()
     {
         // Arrange
-        List<CommitDTO> commitDTO = new List<CommitDTO>()
-        {
-            new CommitDTO(1, "Frepe", new System.DateTime(2021, 1, 1), "1234567890"),
-            new CommitDTO(2, "Banksy", new System.DateTime(2021, 5, 2), "1234567891"),
-        };
-        var analysisDTO = new AnalysisDTO(1, "duckth/testrepo", commitDTO, "1234567891");
-        _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(analysisDTO);
-        var expected = new BadRequestObjectResult("Invalid mode");
+        _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(i => null!); // (i => null!) is a hack to make it compile
+        var expected = new NotFoundObjectResult(null);
 
         // Act
-        var actual = _controller.Get("duckth", "testrepo", "definetly incorrect").Result;
+        var actual = _controller.GetFrequencyMode("duckth", "testrepo").Result;
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -121,12 +137,12 @@ public class AnalysisControllerTests
         actual.Should().BeEquivalentTo(expected);
     }
 
-    [Fact (Skip = "Unable to mock the static method")]
+    [Fact]
     public void Create_Should_Return_CreatedResult_Given_Not_Existing_Entity()
     {
         // Arrange
         var analysisCreateDTO = new AnalysisCreateDTO("duckth/testrepo", null!, "1234567891");
-        _mockRepository.Create(analysisCreateDTO).Returns<(NEWgIT.Core.Response, int)>((Response.Created, 1)); 
+        _mockRepository.Create(analysisCreateDTO).Returns<(NEWgIT.Core.Response, int)>((Response.Created, 1));
         _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(i => null!); // (i => null!) is a hack to make it compile
 
         var commitCreateDTO = new HashSet<CommitCreateDTO>()
@@ -134,8 +150,8 @@ public class AnalysisControllerTests
             new CommitCreateDTO("Frepe", new System.DateTime(2021, 1, 1), "1234567890"),
             new CommitCreateDTO("Banksy", new System.DateTime(2021, 5, 2), "1234567891"),
         };
+
         _mockCommitFetcherService.GetRepoCommits("duckth/testrepo").Returns<(HashSet<CommitCreateDTO>, string)>((commitCreateDTO, "1234567891"));
-        CommitFetcherService.Instance.Returns(_mockCommitFetcherService);
         var expected = new CreatedResult("duckth/testrepo", null);
 
         // Act

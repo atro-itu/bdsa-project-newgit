@@ -1,8 +1,8 @@
 using Octokit;
 
-namespace NEWgIT.Core;
+namespace NEWgIT.Core.Services;
 
-public class ForkFetcherService
+public class ForkFetcherService : IForkFetcherService
 {
     private static ForkFetcherService instance = null!;
     private readonly RepositoryForksClient client;

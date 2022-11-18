@@ -70,32 +70,6 @@ public class AnalysisController : ControllerBase
         };
     }
 
-    [HttpGet(Name = "ReadAnalysis")]
-    public ActionResult<string> Read(string? mode)
-    {
-        throw new NotImplementedException();
-        // IReadOnlyCollection<AnalysisDTO> analysis = _repository.Read();
-
-        // if (!(mode == "author" || mode == "frequency")) return new BadRequestObjectResult("Invalid mode");
-
-        // var output = analysis.Select(a => new
-        // {
-        //     identifier = a.repoIdentifier,
-        //     commits = mode switch
-        //     {
-        //         "author" => CommitCounter.AuthorMode(a.commits),
-        //         "frequency" => CommitCounter.FrequencyMode(a.commits),
-        //         _ => throw new NotImplementedException()
-        //     }
-        // });
-
-
-        // return new OkObjectResult(JsonConvert.SerializeObject(output))
-        // {
-        //     ContentTypes = { "application/json" }
-        // };
-    }
-
     [HttpPost]
     [Route("{repoOwner}/{repoName}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]

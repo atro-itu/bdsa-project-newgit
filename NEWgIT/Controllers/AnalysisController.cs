@@ -2,6 +2,7 @@ namespace NEWgIT.Controllers;
 
 using NEWgIT.Core;
 using NEWgIT.Core.Services;
+using NEWgIT.Core.Data;
 
 [ApiController]
 [Route("[controller]")]
@@ -28,28 +29,28 @@ public class AnalysisController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
-    public ActionResult<Dictionary<DateOnly, int>> GetFrequencyMode(string repoOwner, string repoName)
+    public ActionResult<FrequenciesDTO> GetFrequencyMode(string repoOwner, string repoName)
     {
         var analysis = _repository.FindByIdentifier($"{repoOwner.ToLower()}/{repoName.ToLower()}");
         if (analysis == null) return NotFound();
 
-        var output = CommitCounter.FrequencyMode(analysis.commits);
+        var output = new FrequenciesDTO(CommitCounter.FrequencyMode(analysis.commits));
 
         return Ok(output);
     }
 
     [HttpGet]
     [Route("{repoOwner}/{repoName}/author")]
-    [ProducesResponseType(typeof(Dictionary<string, Dictionary<DateOnly, int>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json")]
 
-    public ActionResult<Dictionary<string, Dictionary<DateOnly, int>>> GetAuthorMode(string repoOwner, string repoName)
+    public ActionResult<AuthorsDTO> GetAuthorMode(string repoOwner, string repoName)
     {
         var analysis = _repository.FindByIdentifier($"{repoOwner.ToLower()}/{repoName.ToLower()}");
         if (analysis == null) return NotFound();
 
-        var output = CommitCounter.AuthorMode(analysis.commits);
+        var output = new AuthorsDTO(CommitCounter.AuthorMode(analysis.commits));
 
         return Ok(output);
     }
@@ -60,17 +61,17 @@ public class AnalysisController : ControllerBase
     [Produces("application/json")]
     public ActionResult<ForksDTO> GetForkMode(string repoOwner, string repoName)
     {
-        var output = new { forks = _forkFetcherService.FetchForks(repoOwner, repoName).Result };
+        var output = new ForksDTO(_forkFetcherService.FetchForks(repoOwner, repoName).Result);
 
         return Ok(output);
     }
 
     [HttpPost]
     [Route("{repoOwner}/{repoName}")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public ActionResult Create(string repoOwner, string repoName)
+    public ActionResult<string> Create(string repoOwner, string repoName)
     {
         var repoIdentifier = $"{repoOwner.ToLower()}/{repoName.ToLower()}";
         var analysis = _repository.FindByIdentifier(repoIdentifier);
@@ -81,7 +82,7 @@ public class AnalysisController : ControllerBase
 
         var (response, analysisId) = _repository.Create(new AnalysisCreateDTO(repoIdentifier, commits, hash));
 
-        return Created(repoIdentifier, null);
+        return Created(repoIdentifier, new { id = analysisId });
     }
 
     [HttpPut]

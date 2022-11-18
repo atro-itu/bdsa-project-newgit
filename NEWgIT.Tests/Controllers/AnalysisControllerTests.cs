@@ -6,6 +6,7 @@ using NEWgIT.Controllers;
 using NSubstitute;
 using NEWgIT.Core;
 using NEWgIT.Core.Services;
+using NEWgIT.Core.Data;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -88,10 +89,7 @@ public class AnalysisControllerTests
         var forks = new HashSet<string>() { "someone/testrepo", "sometwo/testrepo" };
         _mockForkFetcherService.FetchForks("duckth", "testrepo").Returns(forks);
         var expectedForks = new ForksDTO(new HashSet<String> { "someone/testrepo", "sometwo/testrepo" });
-        var expected = new OkObjectResult(expectedForks)
-        {
-            ContentTypes = { "application/json" }
-        };
+        var expected = new OkObjectResult(expectedForks);
 
         // Act
         var actual = _controller.GetForkMode("duckth", "testrepo").Result;

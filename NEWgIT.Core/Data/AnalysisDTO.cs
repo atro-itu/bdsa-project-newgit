@@ -1,4 +1,4 @@
-namespace NEWgIT.Core;
+namespace NEWgIT.Core.Data;
 
 public record AnalysisDTO(int id, string repoIdentifier, ICollection<CommitDTO> commits, string latestCommitHash);
 

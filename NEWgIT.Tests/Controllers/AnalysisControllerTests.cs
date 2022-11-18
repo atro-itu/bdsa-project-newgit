@@ -35,7 +35,12 @@ public class AnalysisControllerTests
         };
         var analysisDTO = new AnalysisDTO(1, "duckth/testrepo", commitDTO, "1234567891");
         _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(analysisDTO);
-        var expected = new OkObjectResult("{\"Frepe\":{\"2021-01-01\":1},\"Banksy\":{\"2021-05-02\":1}}")
+        var expectedDictionary = new Dictionary<string, Dictionary<DateOnly, int>>()
+        {
+            { "Frepe", new Dictionary<DateOnly, int>() { { new DateOnly(2021, 1, 1), 1 } } },
+            { "Banksy", new Dictionary<DateOnly, int>() { { new DateOnly(2021, 5, 2), 1 } } }
+        };
+        var expected = new OkObjectResult(expectedDictionary)
         {
             ContentTypes = { "application/json" }
         };
@@ -59,7 +64,12 @@ public class AnalysisControllerTests
         };
         var analysisDTO = new AnalysisDTO(1, "duckth/testrepo", commitDTO, "1234567891");
         _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(analysisDTO);
-        var expected = new OkObjectResult("{\"2021-01-01\":1,\"2021-05-02\":1}")
+        var expectedDictionary = new Dictionary<DateOnly, int>()
+        {
+            { new DateOnly(2021, 1, 1), 1 },
+            { new DateOnly(2021, 5, 2), 1 }
+        };
+        var expected = new OkObjectResult(expectedDictionary)
         {
             ContentTypes = { "application/json" }
         };
@@ -77,7 +87,8 @@ public class AnalysisControllerTests
         // Arrange
         var forks = new HashSet<string>() { "someone/testrepo", "sometwo/testrepo" };
         _mockForkFetcherService.FetchForks("duckth", "testrepo").Returns(forks);
-        var expected = new OkObjectResult("[\"someone/testrepo\",\"sometwo/testrepo\"]")
+        var expectedForks = new ForksDTO(new HashSet<String> { "someone/testrepo", "sometwo/testrepo" });
+        var expected = new OkObjectResult(expectedForks)
         {
             ContentTypes = { "application/json" }
         };

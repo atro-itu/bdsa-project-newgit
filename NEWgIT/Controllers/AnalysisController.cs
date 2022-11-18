@@ -25,49 +25,44 @@ public class AnalysisController : ControllerBase
     [HttpGet]
     [Route("{repoOwner}/{repoName}")]
     [Route("{repoOwner}/{repoName}/frequency")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<string> GetFrequencyMode(string repoOwner, string repoName)
+    [Produces("application/json")]
+    public ActionResult<Dictionary<DateOnly, int>> GetFrequencyMode(string repoOwner, string repoName)
     {
         var analysis = _repository.FindByIdentifier($"{repoOwner.ToLower()}/{repoName.ToLower()}");
-        if (analysis == null) return new NotFoundObjectResult(null);
+        if (analysis == null) return NotFound();
 
-        var output = JsonConvert.SerializeObject(CommitCounter.FrequencyMode(analysis.commits));
+        var output = CommitCounter.FrequencyMode(analysis.commits);
 
-        return new OkObjectResult(output)
-        {
-            ContentTypes = { "application/json" }
-        };
+        return Ok(output);
     }
 
     [HttpGet]
     [Route("{repoOwner}/{repoName}/author")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Dictionary<string, Dictionary<DateOnly, int>>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<string> GetAuthorMode(string repoOwner, string repoName)
+    [Produces("application/json")]
+
+    public ActionResult<Dictionary<string, Dictionary<DateOnly, int>>> GetAuthorMode(string repoOwner, string repoName)
     {
         var analysis = _repository.FindByIdentifier($"{repoOwner.ToLower()}/{repoName.ToLower()}");
-        if (analysis == null) return new NotFoundObjectResult(null);
+        if (analysis == null) return NotFound();
 
-        var output = JsonConvert.SerializeObject(CommitCounter.AuthorMode(analysis.commits));
+        var output = CommitCounter.AuthorMode(analysis.commits);
 
-        return new OkObjectResult(output)
-        {
-            ContentTypes = { "application/json" }
-        };
+        return Ok(output);
     }
 
     [HttpGet]
     [Route("{repoOwner}/{repoName}/forks")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    public ActionResult<string> GetForkMode(string repoOwner, string repoName)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [Produces("application/json")]
+    public ActionResult<ForksDTO> GetForkMode(string repoOwner, string repoName)
     {
-        var output = JsonConvert.SerializeObject(_forkFetcherService.FetchForks(repoOwner, repoName).Result);
+        var output = new { forks = _forkFetcherService.FetchForks(repoOwner, repoName).Result };
 
-        return new OkObjectResult(output)
-        {
-            ContentTypes = { "application/json" }
-        };
+        return Ok(output);
     }
 
     [HttpPost]
@@ -79,19 +74,19 @@ public class AnalysisController : ControllerBase
     {
         var repoIdentifier = $"{repoOwner.ToLower()}/{repoName.ToLower()}";
         var analysis = _repository.FindByIdentifier(repoIdentifier);
-        if (analysis != null) return new ConflictObjectResult(new { message = "Analysis already exists" });
+        if (analysis != null) return Conflict(new { message = "Analysis already exists" });
 
         var sourceUrl = GetSourceUrl(repoIdentifier);
         var (commits, hash) = _commitFetcherService.GetRepoCommits(sourceUrl);
 
         var (response, analysisId) = _repository.Create(new AnalysisCreateDTO(repoIdentifier, commits, hash));
 
-        return new CreatedResult(repoIdentifier, null);
+        return Created(repoIdentifier, null);
     }
 
     [HttpPut]
     [Route("{repoOwner}/{repoName}")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Update(string repoOwner, string repoName)
     {
@@ -103,13 +98,12 @@ public class AnalysisController : ControllerBase
         var updateDTO = new AnalysisUpdateDTO(repoIdentifier, commits, hash);
         var response = _repository.Update(updateDTO);
 
-        if (response == Core.Response.NotFound) return new NotFoundObjectResult(null);
-        return new OkObjectResult(null);
+        if (response == Core.Response.NotFound) return NotFound();
+        return Ok(null);
     }
 
     [HttpDelete]
     [Route("{repoOwner}/{repoName}")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Delete(string repoOwner, string repoName)
@@ -117,8 +111,8 @@ public class AnalysisController : ControllerBase
         var repoIdentifier = $"{repoOwner.ToLower()}/{repoName.ToLower()}";
         var deleteDTO = new AnalysisDeleteDTO(repoIdentifier);
         var response = _repository.Delete(deleteDTO);
-        if (response == Core.Response.NotFound) return new NotFoundObjectResult(null);
-        return new NoContentResult();
+        if (response == Core.Response.NotFound) return NotFound();
+        return NoContent();
     }
 
     private string GetSourceUrl(string repoIdentifier) => $"https://github.com/{repoIdentifier}";

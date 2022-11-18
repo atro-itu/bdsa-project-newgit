@@ -82,7 +82,7 @@ public class AnalysisController : ControllerBase
 
         var (response, analysisId) = _repository.Create(new AnalysisCreateDTO(repoIdentifier, commits, hash));
 
-        return Created(repoIdentifier, null);
+        return Created(repoIdentifier, new { id = analysisId });
     }
 
     [HttpPut]

@@ -12,7 +12,7 @@ public class ForkFetcherService : IForkFetcherService
     {
         var config = new ConfigurationBuilder()
             .AddUserSecrets<ForkFetcherService>().Build();
-        _client = new GitHubClient(new ProductHeaderValue("NEWgIT")) { Credentials = new Octokit.Credentials(config["PAT:NEWgIT"], AuthenticationType.Bearer) };
+        _client = new GitHubClient(new ProductHeaderValue("NEWgIT")) { Credentials = new Octokit.Credentials(config["PAT_NEWGIT"], AuthenticationType.Bearer) };
     }
 
     public static ForkFetcherService Instance

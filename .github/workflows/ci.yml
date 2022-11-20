@@ -39,4 +39,4 @@ jobs:
         run: dotnet test
 
     env:
-      PAT:NEWgIT: ${{ secrets.GH_TOKEN }}
+      PAT_NEWGIT: ${{ secrets.GH_TOKEN }}

@@ -162,6 +162,38 @@ public class AnalysisControllerTests
     }
 
     [Fact]
+    public void Update_Should_Return_NotFoundObjectResult_Given_None_Existing_Repo()
+    {
+        // Arrange
+        var analysisUpdateDTO = new AnalysisUpdateDTO("duckth/testrepo", null!, null!);
+        _mockRepository.Update(analysisUpdateDTO).Returns<Response>(Response.NotFound);
+        _mockCommitFetcherService.GetRepoCommits("duckth/testrepo").Returns<(HashSet<CommitCreateDTO>, string)>((null!, null!));
+        var expected = new NotFoundObjectResult(null);
+
+        // Act
+        var actual = _controller.Update("duckth", "testrepo");
+
+        // Assert
+        actual.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void Update_Should_Return_Ok_Object_Given_Existing_Repo()
+    {
+        // Arrange
+        var analysisUpdateDTO = new AnalysisUpdateDTO("duckth/testrepo", null!, null!);
+        _mockRepository.Update(analysisUpdateDTO).Returns<Response>(Response.Updated);
+        _mockCommitFetcherService.GetRepoCommits("duckth/testrepo").Returns<(HashSet<CommitCreateDTO>, string)>((null!, null!));
+        var expected = new OkObjectResult(null);
+
+        // Act
+        var actual = _controller.Update("duckth", "testrepo");
+
+        // Assert
+        actual.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
     public void Delete_Should_Return_NotFound_Given_None_Existing_Repo()
     {
         // Arrange

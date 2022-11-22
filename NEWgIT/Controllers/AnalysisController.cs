@@ -35,10 +35,10 @@ public class AnalysisController : ControllerBase
         if (analysis == null) return NotFound();
 
         var output = new FrequenciesDTO(CommitCounter.FrequencyMode(analysis.commits));
-        
+
         return Ok(output);
     }
-    
+
     [HttpGet]
     [Route("{repoOwner}/{repoName}/author")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -46,7 +46,7 @@ public class AnalysisController : ControllerBase
     [Produces("application/json")]
 
     public ActionResult<AuthorsDTO> GetAuthorMode(string repoOwner, string repoName)
-    {   
+    {
         var analysis = _repository.FindByIdentifier($"{repoOwner.ToLower()}/{repoName.ToLower()}");
         if (analysis == null) return NotFound();
 

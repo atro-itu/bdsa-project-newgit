@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Set secret
-        run: dotnet user-secrets set --project NEWgIT.Core PAT:NEWgIT ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet user-secrets set --project NEWgIT.Core PAT:NEWgIT ${{ secrets.PAT_NEWGIT }}
 
       - name: SonarScanner for .NET 7 with pull request decoration support
         uses: highbyte/sonarscan-dotnet@v2.2.1

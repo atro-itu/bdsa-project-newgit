@@ -81,5 +81,5 @@ None
 2. To connect to the GitHub REST API, you need an Access Token. Read [this documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) on how to receive an Access Token for the GitHub REST API. Remember and double check on how Rasmus demonstrated to handle secrets like access tokens in .Net projects. That is, do not store the access token directly in your source code. It should never end up in your source code repository that is publicly shared with the world.
 
 ## Week 5
-1. Extend your GitInsight application with a feature that restricts access only to authorized users. Users have to authenticate themselves before they are able to analyze a GitHub repository.
+1. Extend your `GitInsight` application with a feature that restricts access only to authorized users. Users have to authenticate themselves before they are able to analyze a GitHub repository.
 2. The authentication should hold for the front-end web-application as well as for the back-end REST API.

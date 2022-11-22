@@ -275,6 +275,39 @@ public class AnalysisRepositoryTests : IDisposable
         actualResponse.Should().Be(Response.NotFound);
     }
 
+    [Fact]
+    public void Delete_Should_Return_NotFound_Given_None_Existing_Repo()
+    {
+        // Arrange
+        var analysisDeleteDTO = new AnalysisDeleteDTO("duckth/testing");
+
+        // Act
+        var actualResponse = _analysisRepository.Delete(analysisDeleteDTO);
+
+        // Assert
+        actualResponse.Should().Be(Response.NotFound);
+    }
+
+    [Fact]
+    public void Delete_Should_Return_Deleted_Given_Existing_Repo()
+    {
+        // Arrange
+        var analysisDeleteDTO = new AnalysisDeleteDTO("duckth/testing");
+        _analysisRepository.Create(new AnalysisCreateDTO(
+            repoIdentifier: "duckth/testing",
+            commits: new HashSet<CommitCreateDTO>(){
+                new CommitCreateDTO("duckth", new DateTime(1950,01,10), "1234567890")
+            },
+            latestCommitHash: "1234567890"
+        ));
+
+        // Act
+        var actualResponse = _analysisRepository.Delete(analysisDeleteDTO);
+
+        // Assert
+        actualResponse.Should().Be(Response.Deleted);
+    }
+
     public void Dispose()
     {
         _context.Dispose();

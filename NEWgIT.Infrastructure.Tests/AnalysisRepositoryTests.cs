@@ -135,7 +135,36 @@ public class AnalysisRepositoryTests : IDisposable
     public void Find_Given_Existing_Id_Should_Return_AnalysisDTO()
     {
         // Arrange
+        var expectedCommits = new HashSet<CommitDTO>(){
+            new CommitDTO (1, "duckth", new DateTime(1950,01,10).ToUniversalTime(), "1234567890")
+        };
+        var expectedAnalysis = new AnalysisDTO(1, "duckth/testing", expectedCommits, "1234567890");
         
+        // Act
+        _analysisRepository.Create(new AnalysisCreateDTO(
+            repoIdentifier: "duckth/testing",
+            commits: new HashSet<CommitCreateDTO>(){
+                new CommitCreateDTO("duckth", new DateTime(1950,01,10), "1234567890")
+            },
+            latestCommitHash: "1234567890"
+        ));
+        var actualAnalysis = _analysisRepository.Find(1);
+
+        // Assert
+        actualAnalysis.Should().BeEquivalentTo(expectedAnalysis);
+    }
+
+    [Fact]
+    public void Find_Given_None_Existing_Id_Should_Return_Null()
+    {
+        // Arrange
+        var expectedAnalysis = (AnalysisDTO?)null;
+
+        // Act
+        var actualAnalysis = _analysisRepository.Find(1);
+
+        // Assert
+        actualAnalysis.Should().BeEquivalentTo(expectedAnalysis);
     }
 
     public void Dispose()

@@ -20,9 +20,13 @@ jobs:
   build:
     name: Build & Test
     runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Set secret
+        run: dotnet user-secrets set --project NEWgIT.Core "PAT:NEWgIT" ${{ secrets.GITHUB_TOKEN }}
 
       - name: SonarScanner for .NET 7 with pull request decoration support
         uses: highbyte/sonarscan-dotnet@v2.2.1

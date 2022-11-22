@@ -18,7 +18,7 @@ None
 5. Now that your application changed, update the documentation of your `GitInsight` applications to reflect the current state of the application. For sure, update the architecture illustration from last week. Likely it is a good idea to illustrate how the front-end and the back-end interact when a new analysis is triggered via a sequence diagram. In this case the it will be a sub-system sequence diagram where the blocks on top of swim lanes represent the front-end, back-end, and other systems as sub-systems instead of objects as shown multiple times in lectures, see for example [here](https://www.lucidchart.com/pages/uml-system-sequence-diagram).
 
 ## Week 5
-1. Implement an analysis and visualization of your choice in your GitInsight application.
+1. Implement an analysis and visualization of your choice in your `GitInsight` application.
 
 # Non Functional Requirements
 ## Week 1

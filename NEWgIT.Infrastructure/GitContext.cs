@@ -10,7 +10,7 @@ public class GitContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Analysis>()
-                    .HasIndex(i => i.RepoIdentifier)
+                    .HasIndex(analysis => new { analysis.RepoOwner, analysis.RepoName })
                     .IsUnique();
 
         modelBuilder.Entity<CommitInfo>()

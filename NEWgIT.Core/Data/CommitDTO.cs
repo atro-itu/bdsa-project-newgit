@@ -1,7 +1,7 @@
 namespace NEWgIT.Core.Data;
-
-public record CommitDTO(string author, DateTime date, string hash);
-
-public record CommitCreateDTO(string author, DateTime date, string hash);
-
-// update?
+public sealed record CommitDTO
+{
+    public string Author { get; init; } = null!;
+    public DateTime Date { get; init; }
+    public string Hash { get; init; } = null!;
+}

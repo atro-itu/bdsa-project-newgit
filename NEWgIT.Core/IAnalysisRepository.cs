@@ -2,13 +2,13 @@ namespace NEWgIT.Core;
 
 public interface IAnalysisRepository
 {
-    (Response Response, int AnalysisId) Create(AnalysisCreateDTO analysis);
-    IReadOnlyCollection<AnalysisDTO> Read();
-    AnalysisDTO Find(int ID);
+    Task<Results<Created<AnalysisDTO>, Conflict<AnalysisDTO>>> CreateAsync(AnalysisDTO analysisDTO);
+    Task<IReadOnlyCollection<AnalysisDTO>> ReadAsync();
+    Task<Results<Ok<AnalysisDTO>, NotFound<int>>> FindAsync(int id);
 
-    AnalysisDTO FindByIdentifier(string repoIdentifier);
+    Task<Results<Ok<AnalysisDTO>, NotFound<string>>> FindByIdentifierAsync(string repoIdentifier);
 
-    Response Update(AnalysisUpdateDTO analysis);
+    Task<Results<NoContent, NotFound<int>>> UpdateAsync(AnalysisDTO analysisDTO);
 
-    Response Delete(AnalysisDeleteDTO analysis);
+    Task<Results<NoContent, NotFound<int>>> DeleteAsync(AnalysisDTO analysisDTO);
 }

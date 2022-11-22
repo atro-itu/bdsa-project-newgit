@@ -10,7 +10,7 @@ public class AnalysisRepository : IAnalysisRepository
         _context = context;
     }
 
-    public (Response Response, int AnalysisId) Create(AnalysisCreateDTO analysis)
+    public void Create(AnalysisDTO analysisDTO)
     {
         var conflicts = _context.Analysis.Where(dbAnalysis => dbAnalysis.RepoIdentifier == analysis.repoIdentifier);
 
@@ -29,6 +29,7 @@ public class AnalysisRepository : IAnalysisRepository
         _context.SaveChanges();
 
         var response = Response.Created;
+        // return TypedResult.
 
         return (response, analysisObject.Id);
     }
@@ -85,5 +86,54 @@ public class AnalysisRepository : IAnalysisRepository
         .Commits.Select(commit => new CommitDTO(
             commit.Author, commit.Date, commit.Hash)
         ).ToHashSet();
+
+    public async Task<Results<Created<AnalysisDTO>, Conflict<AnalysisDTO>>> CreateAsync(AnalysisDTO analysisDTO)
+    {
+        var conflict = await _context.Analysis.FirstOrDefaultAsync(dbAnalysis => dbAnalysis.RepoIdentifier == analysisDTO.RepoIdentifier());
+
+        if (conflict is not null) return TypedResults.Conflict(new AnalysisDTO(conflict.Id, conflict.RepoIdentifier, GetCommitDTOs(conflict), conflict.LatestCommitHash));
+
+        // map each dto to commitinfo object, as this is our model
+        ICollection<CommitInfo> commits = analysis.commits.Select(dto => new CommitInfo(author: dto.author, date: dto.date, hash: dto.hash)).ToHashSet();
+
+        var analysisObject = new Analysis(
+            repoIdentifier: analysis.repoIdentifier,
+            latestCommitHash: analysis.latestCommitHash
+        );
+        analysisObject.Commits = commits;
+
+        _context.Analysis.Add(analysisObject);
+        _context.SaveChanges();
+
+        var response = Response.Created;
+        // return TypedResult.
+
+        return (response, analysisObject.Id);
+    }
+
+    public Task<IReadOnlyCollection<AnalysisDTO>> ReadAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Results<Ok<AnalysisDTO>, NotFound<int>>> FindAsync(int ID)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Results<Ok<AnalysisDTO>, NotFound<string>>> FindByIdentifierAsync(string repoIdentifier)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Results<NoContent, NotFound<int>>> UpdateAsync(AnalysisDTO analysis)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Results<NoContent, NotFound<int>>> DeleteAsync(AnalysisDTO analysis)
+    {
+        throw new NotImplementedException();
+    }
 }
 

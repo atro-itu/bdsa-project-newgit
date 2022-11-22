@@ -20,7 +20,6 @@ jobs:
   build:
     name: Build & Test
     runs-on: ubuntu-latest
-    environment: newgit
 
     steps:
       - uses: actions/checkout@v3
@@ -33,12 +32,12 @@ jobs:
       - name: Restore
         run: dotnet restore
 
+      - name: Set secret
+        run: dotnet user-secrets set PAT:NEWgIT ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build
         run: dotnet build --configuration Release
 
       - name: Test
         run: dotnet test
-
-    env:
-      PAT_NEWGIT: ${{ secrets.PAT_NEWGIT }}
 

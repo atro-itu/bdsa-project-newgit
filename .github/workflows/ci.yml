@@ -20,6 +20,7 @@ jobs:
   build:
     name: Build & Test
     runs-on: ubuntu-latest
+    environment: newgit
 
     steps:
       - uses: actions/checkout@v3
@@ -38,5 +39,3 @@ jobs:
       - name: Test
         run: dotnet test
 
-    env:
-      PAT_NEWGIT: ${{ secrets.GH_TOKEN }}

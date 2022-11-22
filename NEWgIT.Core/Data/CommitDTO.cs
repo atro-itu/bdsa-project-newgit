@@ -1,4 +1,4 @@
-namespace NEWgIT.Core;
+namespace NEWgIT.Core.Data;
 
 public record CommitDTO(int commitId, string author, DateTime date, string hash);
 

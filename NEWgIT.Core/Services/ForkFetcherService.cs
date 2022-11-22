@@ -1,15 +1,18 @@
 using Octokit;
+using Microsoft.Extensions.Configuration;
 
 namespace NEWgIT.Core.Services;
 
 public class ForkFetcherService : IForkFetcherService
 {
     private static ForkFetcherService instance = null!;
-    private readonly RepositoryForksClient client;
+    private readonly GitHubClient _client;
 
     private ForkFetcherService()
     {
-        client = new RepositoryForksClient(new ApiConnection(new Connection(new ProductHeaderValue("NEWgIT"))));
+        var config = new ConfigurationBuilder()
+            .AddUserSecrets<ForkFetcherService>().Build();
+        _client = new GitHubClient(new ProductHeaderValue("NEWgIT")) { Credentials = new Octokit.Credentials(config["PAT:NEWgIT"], AuthenticationType.Bearer) };
     }
 
     public static ForkFetcherService Instance
@@ -34,7 +37,7 @@ public class ForkFetcherService : IForkFetcherService
 
     public async Task<ICollection<string>> FetchForks(string repoOwner, string repoName)
     {
-        var forkRepositories = await client.GetAll(repoOwner, repoName);
+        var forkRepositories = await _client.Repository.Forks.GetAll(repoOwner, repoName);
         return forkRepositories.Select(repo => repo.FullName).ToHashSet();
     }
 }

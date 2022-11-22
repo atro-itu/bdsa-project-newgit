@@ -6,6 +6,7 @@ using NEWgIT.Controllers;
 using NSubstitute;
 using NEWgIT.Core;
 using NEWgIT.Core.Services;
+using NEWgIT.Core.Data;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,10 +36,16 @@ public class AnalysisControllerTests
         };
         var analysisDTO = new AnalysisDTO(1, "duckth/testrepo", commitDTO, "1234567891");
         _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(analysisDTO);
-        var expected = new OkObjectResult("{\"Frepe\":{\"2021-01-01\":1},\"Banksy\":{\"2021-05-02\":1}}")
-        {
-            ContentTypes = { "application/json" }
-        };
+
+        var expectedData = new AuthorsDTO(
+            AuthorFrequencies: new Dictionary<string, Dictionary<DateOnly, int>>()
+            {
+                { "Frepe", new Dictionary<DateOnly, int>() { { new DateOnly(2021, 1, 1), 1 } } },
+                { "Banksy", new Dictionary<DateOnly, int>() { { new DateOnly(2021, 5, 2), 1 } } }
+            }
+        );
+
+        var expected = new OkObjectResult(expectedData);
 
         // Act
         var actual = _controller.GetAuthorMode("duckth", "testrepo").Result;
@@ -59,10 +66,16 @@ public class AnalysisControllerTests
         };
         var analysisDTO = new AnalysisDTO(1, "duckth/testrepo", commitDTO, "1234567891");
         _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(analysisDTO);
-        var expected = new OkObjectResult("{\"2021-01-01\":1,\"2021-05-02\":1}")
-        {
-            ContentTypes = { "application/json" }
-        };
+
+        var expectedData = new FrequenciesDTO(
+            Frequencies: new Dictionary<DateOnly, int>()
+            {
+                { new DateOnly(2021, 1, 1), 1 },
+                { new DateOnly(2021, 5, 2), 1 }
+            }
+        );
+
+        var expected = new OkObjectResult(expectedData);
 
         // Act
         var actual = _controller.GetFrequencyMode("duckth", "testrepo").Result;
@@ -77,10 +90,8 @@ public class AnalysisControllerTests
         // Arrange
         var forks = new HashSet<string>() { "someone/testrepo", "sometwo/testrepo" };
         _mockForkFetcherService.FetchForks("duckth", "testrepo").Returns(forks);
-        var expected = new OkObjectResult("[\"someone/testrepo\",\"sometwo/testrepo\"]")
-        {
-            ContentTypes = { "application/json" }
-        };
+        var expectedForks = new ForksDTO(new HashSet<String> { "someone/testrepo", "sometwo/testrepo" });
+        var expected = new OkObjectResult(expectedForks);
 
         // Act
         var actual = _controller.GetForkMode("duckth", "testrepo").Result;
@@ -90,11 +101,11 @@ public class AnalysisControllerTests
     }
 
     [Fact]
-    public void GetAuthor_Should_Return_NotFoundObjectResult_Given_None_Existing_Repo()
+    public void GetAuthor_Should_Return_NotFoundResult_Given_None_Existing_Repo()
     {
         // Arrange
         _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(i => null!); // (i => null!) is a hack to make it compile
-        var expected = new NotFoundObjectResult(null);
+        var expected = new NotFoundResult();
 
         // Act
         var actual = _controller.GetAuthorMode("duckth", "testrepo").Result;
@@ -108,7 +119,7 @@ public class AnalysisControllerTests
     {
         // Arrange
         _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(i => null!); // (i => null!) is a hack to make it compile
-        var expected = new NotFoundObjectResult(null);
+        var expected = new NotFoundResult();
 
         // Act
         var actual = _controller.GetFrequencyMode("duckth", "testrepo").Result;
@@ -131,7 +142,7 @@ public class AnalysisControllerTests
         var expected = new ConflictObjectResult(new { message = "Analysis already exists" });
 
         // Act
-        var actual = _controller.Create("duckth", "testrepo");
+        var actual = _controller.Create("duckth", "testrepo").Result;
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -155,7 +166,7 @@ public class AnalysisControllerTests
         var expected = new CreatedResult("duckth/testrepo", null);
 
         // Act
-        var actual = _controller.Create("duckth", "testrepo");
+        var actual = _controller.Create("duckth", "testrepo").Result;
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -168,7 +179,7 @@ public class AnalysisControllerTests
         var analysisUpdateDTO = new AnalysisUpdateDTO("duckth/testrepo", null!, null!);
         _mockRepository.Update(analysisUpdateDTO).Returns<Response>(Response.NotFound);
         _mockCommitFetcherService.GetRepoCommits("duckth/testrepo").Returns<(HashSet<CommitCreateDTO>, string)>((null!, null!));
-        var expected = new NotFoundObjectResult(null);
+        var expected = new NotFoundResult();
 
         // Act
         var actual = _controller.Update("duckth", "testrepo");
@@ -199,7 +210,7 @@ public class AnalysisControllerTests
         // Arrange
         var analysisDeleteDTO = new AnalysisDeleteDTO("duckth/testrepo");
         _mockRepository.Delete(analysisDeleteDTO).Returns(Response.NotFound);
-        var expected = new NotFoundObjectResult(null);
+        var expected = new NotFoundResult();
 
         // Act
         var actual = _controller.Delete("duckth", "testrepo");

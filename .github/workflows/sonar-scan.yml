@@ -20,6 +20,7 @@ jobs:
   build:
     name: Build & Test
     runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
 
     steps:
       - uses: actions/checkout@v3
@@ -30,6 +31,7 @@ jobs:
           sonarProjectKey: duckth_bdsa-project-newgit
           sonarProjectName: bdsa-project-newgit
           sonarOrganization: duckth
+          dotnetPreBuildCmd: dotnet user-secrets set --project NEWgIT.Core PAT:NEWgIT ${{ secrets.GITHUB_TOKEN }}
           dotnetTestArguments: --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
           sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
 

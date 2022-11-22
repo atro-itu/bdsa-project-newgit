@@ -1,5 +1,6 @@
+
 ```plantuml
-@startuml
+@startuml classDiagram
 
 namespace NEWgIT.Core {
   namespace Services{

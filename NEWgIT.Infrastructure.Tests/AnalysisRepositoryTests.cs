@@ -203,6 +203,78 @@ public class AnalysisRepositoryTests : IDisposable
         actualAnalysis.Should().BeEquivalentTo(expectedAnalysis);
     }
 
+    [Fact]
+    public void Update_Should_Return_Ok_Given_Existing_And_Already_Updated_Repo()
+    {
+        // Arrange
+        var commits = new HashSet<CommitDTO>(){
+            new CommitDTO (1, "duckth", new DateTime(1950,01,10).ToUniversalTime(), "1234567890")
+        };
+        
+        // Act
+        _analysisRepository.Create(new AnalysisCreateDTO(
+            repoIdentifier: "duckth/testing",
+            commits: new HashSet<CommitCreateDTO>(){
+                new CommitCreateDTO("duckth", new DateTime(1950,01,10), "1234567890")
+            },
+            latestCommitHash: "1234567890"
+        ));
+        var actualResponse = _analysisRepository.Update(new AnalysisUpdateDTO(
+            repoIdentifier: "duckth/testing",
+            commits: new HashSet<CommitCreateDTO>(){
+                new CommitCreateDTO("duckth", new DateTime(1950,01,10), "1234567890")
+            },
+            latestCommitHash: "1234567890"
+        ));
+
+        // Assert
+        actualResponse.Should().Be(Response.Ok);
+    }
+
+    [Fact]
+    public void Update_Should_Return_Updated_Given_Existing_And_Outdated_Repo() 
+    {
+         var commits = new HashSet<CommitDTO>(){
+            new CommitDTO (1, "duckth", new DateTime(1950,01,10).ToUniversalTime(), "1234567890")
+        };
+        
+        // Act
+        _analysisRepository.Create(new AnalysisCreateDTO(
+            repoIdentifier: "duckth/testing",
+            commits: new HashSet<CommitCreateDTO>(){
+                new CommitCreateDTO("duckth", new DateTime(1950,01,10), "1234567890")
+            },
+            latestCommitHash: "1234567890"
+        ));
+        var actualResponse = _analysisRepository.Update(new AnalysisUpdateDTO(
+            repoIdentifier: "duckth/testing",
+            commits: new HashSet<CommitCreateDTO>(){
+                new CommitCreateDTO("duckth", new DateTime(1950,01,10), "0987654321")
+            },
+            latestCommitHash: "0987654321"
+        ));
+
+        // Assert
+        actualResponse.Should().Be(Response.Updated);
+    }
+
+    [Fact]
+    public void Update_Should_Return_NotFound_Given_None_Existing_Repo()
+    {
+        // Arrange
+        // Act
+        var actualResponse = _analysisRepository.Update(new AnalysisUpdateDTO(
+            repoIdentifier: "duckth/testing",
+            commits: new HashSet<CommitCreateDTO>(){
+                new CommitCreateDTO("duckth", new DateTime(1950,01,10), "1234567890")
+            },
+            latestCommitHash: "1234567890"
+        ));
+
+        // Assert
+        actualResponse.Should().Be(Response.NotFound);
+    }
+
     public void Dispose()
     {
         _context.Dispose();

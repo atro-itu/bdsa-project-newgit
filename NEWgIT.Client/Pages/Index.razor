@@ -1,0 +1,150 @@
+﻿@page "/"
+@using Radzen
+@using System.Globalization
+@using System;
+@using System.Linq;
+@using System.Collections.Generic;
+@using NEWgIT.Core;
+@using System.Net.Http;
+@using NEWgIT.Core.Data;
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using System.Web.Mvc;
+    
+<RadzenText TextStyle="TextStyle.H2" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
+    Welcome to NEWgIT
+</RadzenText>
+
+<RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3" TextAlign="TextAlign.Center"></RadzenText>
+<RadzenTextBox Placeholder="Insert github repository identifier" Change=@(args => OnChange(args)) Class="TextBox" />
+
+ <RadzenButton class="AnalyzeButton" Click=@(args => OnClick("Primary button")) Text="Analyze" ButtonStyle="ButtonStyle.Primary"/>
+
+<RadzenText TextStyle="TextStyle.H4" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
+    Commit Frequency
+</RadzenText>
+
+ <RadzenChart>
+        <RadzenLineSeries Smooth="false" Data="@allCommits" CategoryProperty="Date" ValueProperty="commits" Title="All Commits">
+        </RadzenLineSeries>
+                <RadzenCategoryAxis Visible="false"/>
+            <RadzenValueAxis>
+        <RadzenGridLines Visible="true" />
+    </RadzenValueAxis>
+</RadzenChart>
+
+<RadzenText TextStyle="TextStyle.H4" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
+    Commit Frequency pr author
+</RadzenText> 
+
+@foreach(var author in commitsPrAuthor)
+{ 
+<div class="prAuthorBox">
+<RadzenChart class="RadzenChartPrAuthor">
+        <RadzenLineSeries Smooth="false" Data="@author.Value" CategoryProperty="Date" Title="@author.Key" ValueProperty="Commits">
+        </RadzenLineSeries>
+    <RadzenCategoryAxis Visible="false"/>
+        <RadzenValueAxis>
+        <RadzenGridLines Visible="true" />
+    </RadzenValueAxis>
+</RadzenChart>
+</div>
+} 
+
+@code {
+//MOCK
+Dictionary<DateOnly, int>? frequencyDictionary;
+
+Dictionary<DateOnly, int> frequencyDictionary0 = new Dictionary<DateOnly, int>()
+{
+    {new DateOnly (2022, 11, 03), 1},
+    {new DateOnly (2019, 05, 26), 2},
+    {new DateOnly (2017, 05, 26), 2},
+    {new DateOnly (2019, 05, 25), 3},
+    {new DateOnly (2010, 05, 25), 1},
+    {new DateOnly (2010, 05, 26), 1},
+};
+
+Dictionary<DateOnly, int> frequencyDictionary1 = new Dictionary<DateOnly, int>()
+{
+    {new DateOnly (2022, 11, 03), 7},
+    {new DateOnly (2019, 07, 26), 2},
+    {new DateOnly (2017, 05, 29), 5},
+    {new DateOnly (2010, 02, 25), 1},
+    {new DateOnly (2010, 05, 26), 2},
+};
+Dictionary<string, Dictionary<DateOnly, int>>? authorDictionary;
+Dictionary<string, commitItem[]> commitsPrAuthor = new Dictionary<string, commitItem[]>();
+string[] commitsPrAuthors;
+string? value;
+string? repoIdentifier; 
+commitItem[] allCommits;
+
+void OnChange(string value)
+{
+    this.value = value;
+}
+HttpClient client;
+
+async void OnClick(string buttonName)
+{   
+    client = new HttpClient();
+    var res = await client.GetAsync("http://localhost:7325/analysis/duckth/bdsa-project-newgit");
+    res.EnsureSuccessStatusCode();
+    var body = res.Content;
+    Console.WriteLine(body);
+    repoIdentifier = value;
+    getFreqAnalysis();
+    getPrAuthorAnalysis();
+} 
+
+void getFreqAnalysis(){
+    frequencyDictionary = new Dictionary<DateOnly, int>()
+    {
+            {new DateOnly (2022, 11, 03), 1},
+            {new DateOnly (2019, 05, 26), 2},
+            {new DateOnly (2019, 05, 25), 3},
+            {new DateOnly (2010, 05, 25), 1},
+            {new DateOnly (2010, 05, 26), 1},
+    };
+    allCommits = new commitItem[frequencyDictionary.Count];
+    convert(frequencyDictionary, allCommits);
+}
+
+void getPrAuthorAnalysis(){
+   authorDictionary = new Dictionary<string, Dictionary<DateOnly, int>> ()
+    {
+    { "Mads", frequencyDictionary0},
+    { "Dependabot", frequencyDictionary1},
+    { "Trøstrup", frequencyDictionary0},
+    };
+     foreach (var author in authorDictionary)
+     {  
+        commitItem[] authorArr = new commitItem[author.Value.Count];
+        convert(author.Value, authorArr);
+        commitsPrAuthor.Add(author.Key, authorArr);
+     }
+}
+
+void convert(Dictionary<DateOnly, int> toBeConverted, commitItem[] arr){
+    var sortedDictionary = new SortedDictionary<DateOnly, int>(toBeConverted);
+    int counter = 0; 
+    foreach (var date in sortedDictionary)
+    {
+        arr[counter] = new commitItem
+        {
+            Date = date.Key,
+            Commits = date.Value
+        };
+        counter++;        
+    }   
+}
+
+//Helper 
+class commitItem
+{
+    public DateOnly Date { get; set; }
+    public int Commits { get; set; }
+}
+
+}

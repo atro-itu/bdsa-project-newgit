@@ -29,4 +29,5 @@ public static class Stringify
     }
 
     public static CultureInfo GetFormat() => CultureInfo.CreateSpecificCulture("da-DK");
+
 }

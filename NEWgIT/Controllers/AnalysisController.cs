@@ -116,5 +116,5 @@ public class AnalysisController : ControllerBase
         return NoContent();
     }
 
-    private string GetSourceUrl(string repoIdentifier) => $"https://github.com/{repoIdentifier}";
+    private static string GetSourceUrl(string repoIdentifier) => $"https://github.com/{repoIdentifier}";
 }

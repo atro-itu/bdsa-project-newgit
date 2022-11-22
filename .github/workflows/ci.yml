@@ -33,7 +33,7 @@ jobs:
         run: dotnet restore
 
       - name: Set secret
-        run: dotnet user-secrets set PAT:NEWgIT ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet user-secrets set --project NEWgIT.Core PAT:NEWgIT ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         run: dotnet build --configuration Release

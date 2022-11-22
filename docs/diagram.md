@@ -1,41 +1,36 @@
-```mermaid
-classDiagram-v2
-    class NEWgIT
-        class Controllers
-            class AnalysisController
-        class Program
+```plantuml
+@startuml
 
-        Controllers -- NEWgIT
-            AnalysisController -- Controllers
-        Program -- NEWgIT
+namespace NEWgIT.Core {
+  namespace Services{
+    class CommitFetcherService{}
+    class ForkFetcherService{}
+    class ICommitFetcherService{}
+    class IForkFetcherService{}
+  }
+  class AnalysisDTO {}
+  class CommitCounter{}
+  class CommitDTO{}
+  class IAnalysisRepository{}
+  class RepositoryExtensions{}
+  class Response{}
+  class Stringify{}
+}
 
-    class NEWgITdotCore
-        class AnalysisDTO
-        class CommitCounter
-        class CommitDTO
-        class IAnalysisRepository
-        class RepositoryExtensions
-        class Response
-        class Stringify
+namespace NEWgIT.Infrastructure{
+  class Analysis{}
+  class AnalysisRepository{}
+  class CommitInfo{}
+  class DbExtensions{}
+  class GitContext{}
+}
 
-        AnalysisDTO -- NEWgITdotCore
-        CommitCounter -- NEWgITdotCore
-        CommitDTO -- NEWgITdotCore
-        IAnalysisRepository -- NEWgITdotCore
-        RepositoryExtensions -- NEWgITdotCore
-        Response -- NEWgITdotCore
-        Stringify -- NEWgITdotCore
+namespace NEWgIT{
+  namespace Controller{
+    class AnalysisController{}
+  }
+  class Program{}
+}
 
-    class NEWgITdotInfrastructure
-        class Analysis
-        class AnalysisRepository
-        class CommitInfo
-        class DbExtensions
-        class GitContext
-
-        Analysis -- NEWgITdotInfrastructure
-        AnalysisRepository -- NEWgITdotInfrastructure
-        CommitInfo -- NEWgITdotInfrastructure
-        DbExtensions -- NEWgITdotInfrastructure
-        GitContext -- NEWgITdotInfrastructure
+@enduml
 ```

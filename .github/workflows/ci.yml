@@ -39,3 +39,6 @@ jobs:
       - name: Test
         run: dotnet test
 
+    env:
+      PAT_NEWGIT: ${{ secrets.PAT_NEWGIT }}
+

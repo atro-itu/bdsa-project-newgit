@@ -179,7 +179,7 @@ public class AnalysisControllerTests
         var analysisUpdateDTO = new AnalysisUpdateDTO("duckth/testrepo", null!, null!);
         _mockRepository.Update(analysisUpdateDTO).Returns<Response>(Response.NotFound);
         _mockCommitFetcherService.GetRepoCommits("duckth/testrepo").Returns<(HashSet<CommitCreateDTO>, string)>((null!, null!));
-        var expected = new NotFoundObjectResult(null);
+        var expected = new NotFoundResult();
 
         // Act
         var actual = _controller.Update("duckth", "testrepo");

@@ -17,6 +17,9 @@ None
 4. Implement a visualization of the forks of a GitHub repository as a third visualization. It might just be a list view similar as illustrated on top. In case you find a more suitable visualization, you are free to choose that instead.
 5. Now that your application changed, update the documentation of your `GitInsight` applications to reflect the current state of the application. For sure, update the architecture illustration from last week. Likely it is a good idea to illustrate how the front-end and the back-end interact when a new analysis is triggered via a sequence diagram. In this case the it will be a sub-system sequence diagram where the blocks on top of swim lanes represent the front-end, back-end, and other systems as sub-systems instead of objects as shown multiple times in lectures, see for example [here](https://www.lucidchart.com/pages/uml-system-sequence-diagram).
 
+## Week 5
+1. Implement an analysis and visualization of your choice in your GitInsight application.
+
 # Non Functional Requirements
 ## Week 1
 1. Build a small C#/.Net Core application that can be run from the command-line. As a parameter, it should receive the path to a Git repository that resides in a local directory, i.e., a directory on your computer.
@@ -76,3 +79,7 @@ None
 ## Week 4
 1. Add a front-end web-application that you write with .Net Blazor (WebAssembly) to your already existing applications
 2. To connect to the GitHub REST API, you need an Access Token. Read [this documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) on how to receive an Access Token for the GitHub REST API. Remember and double check on how Rasmus demonstrated to handle secrets like access tokens in .Net projects. That is, do not store the access token directly in your source code. It should never end up in your source code repository that is publicly shared with the world.
+
+## Week 5
+1. Extend your GitInsight application with a feature that restricts access only to authorized users. Users have to authenticate themselves before they are able to analyze a GitHub repository.
+2. The authentication should hold for the front-end web-application as well as for the back-end REST API.

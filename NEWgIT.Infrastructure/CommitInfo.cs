@@ -2,14 +2,13 @@ namespace NEWgIT.Infrastructure;
 
 public class CommitInfo
 {
-    public int Id { get; set; }
-
     [StringLength(100)]
     [Required]
     public string Author { get; set; }
 
     [StringLength(40)]
     [Required]
+    [Key]
     public string Hash { get; set; }
 
     [Required]

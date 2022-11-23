@@ -33,9 +33,9 @@ public class AnalysisRepositoryTests : IDisposable
         // Arrange
         var (commitDTOs, hash) = CommitFetcherService.Instance.GetRepoCommits(_gitRepository);
         ICollection<CommitInfo> expectedCommits = _gitRepository.Commits
-                .Select(commit => 
-                    new CommitInfo( author: commit.Author.Name, 
-                                    date: commit.Committer.When.DateTime, 
+                .Select(commit =>
+                    new CommitInfo(author: commit.Author.Name,
+                                    date: commit.Committer.When.DateTime,
                                     hash: commit.Sha)
                 ).ToHashSet();
 
@@ -61,7 +61,7 @@ public class AnalysisRepositoryTests : IDisposable
     public void Create_Given_Already_Existing_Repo_Should_Return_Conflict()
     {
         // Arrange
-        var commitDTOsHash = new HashSet<CommitCreateDTO>(){new CommitCreateDTO("issa me", new DateTime(1950,03,03), "1234567890")};
+        var commitDTOsHash = new HashSet<CommitCreateDTO>() { new CommitCreateDTO("issa me", new DateTime(1950, 03, 03), "1234567890") };
         var (commitDTOs, hash) = (commitDTOsHash, "0987654321");
         var expected = (Response.Conflict, 1);
 
@@ -102,16 +102,15 @@ public class AnalysisRepositoryTests : IDisposable
         var hash = "1234567890";
         var actualCommitHashSet = new HashSet<CommitCreateDTO>(){
                 new CommitCreateDTO(
-                    "issa me", 
-                    new DateTime(1950,01,10), 
+                    "issa me",
+                    new DateTime(1950,01,10),
                     hash
                 )}; // Part of actual
 
         var expectedCommitList = new List<CommitDTO>(){
                 new CommitDTO(
-                    1, 
-                    "issa me", 
-                    new DateTime(1950,01,10).ToUniversalTime(), 
+                    "issa me",
+                    new DateTime(1950,01,10).ToUniversalTime(),
                     hash
                 )}; // Part of expected
 
@@ -136,10 +135,10 @@ public class AnalysisRepositoryTests : IDisposable
     {
         // Arrange
         var expectedCommits = new HashSet<CommitDTO>(){
-            new CommitDTO (1, "duckth", new DateTime(1950,01,10).ToUniversalTime(), "1234567890")
+            new CommitDTO ("duckth", new DateTime(1950,01,10).ToUniversalTime(), "1234567890")
         };
         var expectedAnalysis = new AnalysisDTO(1, "duckth/testing", expectedCommits, "1234567890");
-        
+
         // Act
         _analysisRepository.Create(new AnalysisCreateDTO(
             repoIdentifier: "duckth/testing",
@@ -172,10 +171,10 @@ public class AnalysisRepositoryTests : IDisposable
     {
         // Arrange
         var expectedCommits = new HashSet<CommitDTO>(){
-            new CommitDTO (1, "duckth", new DateTime(1950,01,10).ToUniversalTime(), "1234567890")
+            new CommitDTO ("duckth", new DateTime(1950,01,10).ToUniversalTime(), "1234567890")
         };
         var expectedAnalysis = new AnalysisDTO(1, "duckth/testing", expectedCommits, "1234567890");
-        
+
         // Act
         _analysisRepository.Create(new AnalysisCreateDTO(
             repoIdentifier: "duckth/testing",
@@ -195,7 +194,7 @@ public class AnalysisRepositoryTests : IDisposable
     {
         // Arrange
         var expectedAnalysis = (AnalysisDTO?)null;
-        
+
         // Act
         var actualAnalysis = _analysisRepository.FindByIdentifier("duckth/testing");
 
@@ -208,9 +207,9 @@ public class AnalysisRepositoryTests : IDisposable
     {
         // Arrange
         var commits = new HashSet<CommitDTO>(){
-            new CommitDTO (1, "duckth", new DateTime(1950,01,10).ToUniversalTime(), "1234567890")
+            new CommitDTO ("duckth", new DateTime(1950,01,10).ToUniversalTime(), "1234567890")
         };
-        
+
         // Act
         _analysisRepository.Create(new AnalysisCreateDTO(
             repoIdentifier: "duckth/testing",
@@ -232,12 +231,12 @@ public class AnalysisRepositoryTests : IDisposable
     }
 
     [Fact]
-    public void Update_Should_Return_Updated_Given_Existing_And_Outdated_Repo() 
+    public void Update_Should_Return_Updated_Given_Existing_And_Outdated_Repo()
     {
-         var commits = new HashSet<CommitDTO>(){
-            new CommitDTO (1, "duckth", new DateTime(1950,01,10).ToUniversalTime(), "1234567890")
+        var commits = new HashSet<CommitDTO>(){
+            new CommitDTO ("duckth", new DateTime(1950,01,10).ToUniversalTime(), "1234567890")
         };
-        
+
         // Act
         _analysisRepository.Create(new AnalysisCreateDTO(
             repoIdentifier: "duckth/testing",

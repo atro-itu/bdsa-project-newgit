@@ -83,7 +83,7 @@ public class AnalysisRepository : IAnalysisRepository
 
     private static ICollection<CommitDTO> GetCommitDTOs(Analysis analysis) => analysis
         .Commits.Select(commit => new CommitDTO(
-            commit.Id, commit.Author, commit.Date, commit.Hash)
+            commit.Author, commit.Date, commit.Hash)
         ).ToHashSet();
 }
 

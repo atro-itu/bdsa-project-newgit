@@ -131,7 +131,6 @@ async void analyseForks(){
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadFromJsonAsync<ForksDTO>();
         var Forks = responseBody.Forks;
-        Console.WriteLine(Forks.Count());
     }
     catch (HttpRequestException e)
     {

@@ -31,8 +31,8 @@ public class AnalysisControllerTests
         // Arrange
         List<CommitDTO> commitDTO = new List<CommitDTO>()
         {
-            new CommitDTO(1, "Frepe", new System.DateTime(2021, 1, 1), "1234567890"),
-            new CommitDTO(2, "Banksy", new System.DateTime(2021, 5, 2), "1234567891"),
+            new CommitDTO("Frepe", new System.DateTime(2021, 1, 1), "1234567890"),
+            new CommitDTO("Banksy", new System.DateTime(2021, 5, 2), "1234567891"),
         };
         var analysisDTO = new AnalysisDTO(1, "duckth/testrepo", commitDTO, "1234567891");
         _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(analysisDTO);
@@ -61,8 +61,8 @@ public class AnalysisControllerTests
         // Arrange
         List<CommitDTO> commitDTO = new List<CommitDTO>()
         {
-            new CommitDTO(1, "Frepe", new System.DateTime(2021, 1, 1), "1234567890"),
-            new CommitDTO(2, "Banksy", new System.DateTime(2021, 5, 2), "1234567891"),
+            new CommitDTO("Frepe", new System.DateTime(2021, 1, 1), "1234567890"),
+            new CommitDTO("Banksy", new System.DateTime(2021, 5, 2), "1234567891"),
         };
         var analysisDTO = new AnalysisDTO(1, "duckth/testrepo", commitDTO, "1234567891");
         _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(analysisDTO);
@@ -134,8 +134,8 @@ public class AnalysisControllerTests
         // Arrange
         List<CommitDTO> commitDTO = new List<CommitDTO>()
         {
-            new CommitDTO(1, "Frepe", new System.DateTime(2021, 1, 1), "1234567890"),
-            new CommitDTO(2, "Banksy", new System.DateTime(2021, 5, 2), "1234567891"),
+            new CommitDTO("Frepe", new System.DateTime(2021, 1, 1), "1234567890"),
+            new CommitDTO("Banksy", new System.DateTime(2021, 5, 2), "1234567891"),
         };
         var analysisDTO = new AnalysisDTO(1, "duckth/testrepo", commitDTO, "1234567891");
         _mockRepository.FindByIdentifier("duckth/testrepo").Returns<AnalysisDTO>(analysisDTO);

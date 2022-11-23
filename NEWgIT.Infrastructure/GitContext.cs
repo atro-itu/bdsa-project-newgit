@@ -14,7 +14,7 @@ public class GitContext : DbContext
                     .IsUnique();
 
         modelBuilder.Entity<CommitInfo>()
-                    .HasIndex(i => i.Id)
+                    .HasIndex(i => i.Hash)
                     .IsUnique();
     }
 }

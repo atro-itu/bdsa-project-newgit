@@ -45,27 +45,23 @@ namespace NEWgIT{
   class Program{}
 }
 
-NEWgIT.Core.IAnalysisRepository <|-- NEWgIT.Infrastructure.AnalysisRepository
+'Outgoing NEWgIT.Infrastructure.AnalysisRepository dependencies'
+NEWgIT.Core <|-- NEWgIT.Infrastructure
+
+'Internal NEWgIT.Core.Services dependencies'
 NEWgIT.Core.Services.ICommitFetcherService <|-- NEWgIT.Core.Services.CommitFetcherService
 NEWgIT.Core.Services.IForkFetcherService <|-- NEWgIT.Core.Services.ForkFetcherService
+
+'Internal NEWgIT.Infrastructure.denpendencies
 NEWgIT.Infrastructure.GitContext <|-- NEWgIT.Infrastructure.AnalysisRepository
-NEWgIT.Core.Response <|-- NEWgIT.Infrastructure.AnalysisRepository
 NEWgIT.Infrastructure.Analysis <|-- NEWgIT.Infrastructure.AnalysisRepository
-NEWgIT.Core.Data.AnalysisDTO <|-- NEWgIT.Infrastructure.AnalysisRepository
-NEWgIT.Core.Data.CommitDTO <|-- NEWgIT.Infrastructure.AnalysisRepository
 NEWgIT.Infrastructure.CommitInfo <|-- NEWgIT.Infrastructure.AnalysisRepository
 NEWgIT.Infrastructure.DbExtensions <|-- NEWgIT.Infrastructure.Analysis
 NEWgIT.Infrastructure.Analysis <|-- NEWgIT.Infrastructure.GitContext
 NEWgIT.Infrastructure.CommitInfo <|-- NEWgIT.Infrastructure.GitContext
-NEWgIT.Core.IAnalysisRepository <|-- NEWgIT.Controller.AnalysisController
-NEWgIT.Core.Services.ICommitFetcherService <|-- NEWgIT.Controller.AnalysisController
-NEWgIT.Core.Services.IForkFetcherService <|-- NEWgIT.Controller.AnalysisController
-NEWgIT.Core.Data.AuthorsDTO <|-- NEWgIT.Controller.AnalysisController
-NEWgIT.Core.Data.FrequenciesDTO <|-- NEWgIT.Controller.AnalysisController
-NEWgIT.Core.CommitCounter <|-- NEWgIT.Controller.AnalysisController
-NEWgIT.Core.Data.ForksDTO <|-- NEWgIT.Controller.AnalysisController
-NEWgIT.Core.Data.AnalysisDTO <|-- NEWgIT.Controller.AnalysisController
-NEWgIT.Core.Response <|-- NEWgIT.Controller.AnalysisController
+
+'Outgoing NEWgIT.Controller.AnalysisController dependencies'
+NEWgIT.Core <|-- NEWgIT
 
 @enduml
 ```

@@ -1,4 +1,5 @@
 # Diagrams
+
 This document holds the UML diagrams for the project.
 
 ## Package Diagram

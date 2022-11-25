@@ -13,13 +13,13 @@ namespace NEWgIT.Core {
   namespace Services{
     class CommitFetcherService{}
     class ForkFetcherService{}
-    class ICommitFetcherService{}
-    class IForkFetcherService{}
+    interface ICommitFetcherService{}
+    interface IForkFetcherService{}
   }
   class AnalysisDTO {}
   class CommitCounter{}
   class CommitDTO{}
-  class IAnalysisRepository{}
+  interface IAnalysisRepository{}
   class RepositoryExtensions{}
   class Response{}
   class Stringify{}
@@ -39,6 +39,10 @@ namespace NEWgIT{
   }
   class Program{}
 }
+
+NEWgIT.Core.IAnalysisRepository <|-- NEWgIT.Infrastructure.AnalysisRepsository
+NEWgIT.Core.Services.ICommitFetcherService <|-- NEWgIT.Core.Services.CommitFetcherService
+NEWgIT.Core.Services.IForkFetcherService <|-- NEWgIT.Core.Services.ForkFetcherService
 
 @enduml
 ```

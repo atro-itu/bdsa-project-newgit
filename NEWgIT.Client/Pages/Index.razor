@@ -17,146 +17,150 @@
 </RadzenText>
 
 <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3" TextAlign="TextAlign.Center"></RadzenText>
-<RadzenTextBox Placeholder="Insert github repository identifier" Change=@(args => OnChange(args)) Class="TextBox" />
+<RadzenTextBox Placeholder="Insert github repository identifier" Change=@(args => OnChange(args)) Class="TextBox"/>
 
- <RadzenButton class="AnalyzeButton" Click=@(args => OnClick("Primary button")) Text="Analyze" ButtonStyle="ButtonStyle.Primary"/>
-@if(repoIdentifier!=null){
-<RadzenText TextStyle="TextStyle.H4" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
-    Commit Frequency
-</RadzenText>
+<RadzenButton class="AnalyzeButton" Click=@(args => OnClick("Primary button")) Text="Analyze" ButtonStyle="ButtonStyle.Primary"/>
+@if (repoIdentifier != null)
+{
+    <RadzenText TextStyle="TextStyle.H4" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
+        Commit Frequency
+    </RadzenText>
 
-<RadzenChart>
-    <RadzenColumnSeries Data="@allCommits" CategoryProperty="Date" Title="All Commits" LineType="LineType.Dashed" ValueProperty="commits">
-    </RadzenColumnSeries>
-    <RadzenColumnOptions Radius="5" />
-    <RadzenValueAxis>
-        <RadzenGridLines Visible="true" />
-    </RadzenValueAxis>
-</RadzenChart> 
+    <RadzenChart>
+        <RadzenColumnSeries Data="@allCommits" CategoryProperty="Date" Title="All Commits" LineType="LineType.Dashed" ValueProperty="commits">
+        </RadzenColumnSeries>
+        <RadzenColumnOptions Radius="5"/>
+        <RadzenValueAxis>
+            <RadzenGridLines Visible="true"/>
+        </RadzenValueAxis>
+    </RadzenChart>
 
-<RadzenText TextStyle="TextStyle.H4" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
-    Commit Frequency pr author
-</RadzenText> 
+    <RadzenText TextStyle="TextStyle.H4" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
+        Commit Frequency pr author
+    </RadzenText>
 
-@foreach(var author in commitsPrAuthor)
-{ 
-<RadzenChart>
-    <RadzenColumnSeries Data="@author.Value" CategoryProperty="Date" Title="@author.Key" LineType="LineType.Dashed" ValueProperty="commits">
-    </RadzenColumnSeries>
-    <RadzenColumnOptions Radius="5" />
-    <RadzenValueAxis>
-        <RadzenGridLines Visible="true" />
-    </RadzenValueAxis>
-</RadzenChart> 
-} 
+@foreach (var author in commitsPrAuthor)
+{
+    <RadzenChart>
+        <RadzenColumnSeries Data="@author.Value" CategoryProperty="Date" Title="@author.Key" LineType="LineType.Dashed" ValueProperty="commits">
+        </RadzenColumnSeries>
+        <RadzenColumnOptions Radius="5"/>
+        <RadzenValueAxis>
+            <RadzenGridLines Visible="true"/>
+        </RadzenValueAxis>
+    </RadzenChart>
+}
 
- <RadzenDataGrid AllowColumnResize="true" PageSize="5" ShowPagingSummary="true" Data="@Forks" TItem="string" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+    <RadzenDataGrid AllowColumnResize="true" PageSize="5" ShowPagingSummary="true" Data="@Forks" TItem="string" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
         <Columns>
-            <RadzenDataGridColumn TItem="String" Property="String" Filterable="false" Title="Forks" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="String" Property="String" Filterable="false" Title="Forks" Frozen="true" Width="80px" TextAlign="TextAlign.Center"/>
         </Columns>
-</RadzenDataGrid>
+    </RadzenDataGrid>
 }
 
 
 @code {
-//MOCK
-ICollection<string> Forks;
-Dictionary<DateOnly, int> frequencyDictionary;
-Dictionary<string, Dictionary<DateOnly, int>> authorDictionary;
-Dictionary<string, commitItem[]> commitsPrAuthor = new Dictionary<string, commitItem[]>();
-string[] commitsPrAuthors;
-string repoIdentifier; 
-commitItem[] allCommits;
-static readonly HttpClient client = new HttpClient();
+    //MOCK
+    ICollection<string> Forks;
+    Dictionary<DateOnly, int> frequencyDictionary;
+    Dictionary<string, Dictionary<DateOnly, int>> authorDictionary;
+    Dictionary<string, commitItem[]> commitsPrAuthor = new Dictionary<string, commitItem[]>();
+    string[] commitsPrAuthors;
+    string repoIdentifier;
+    commitItem[] allCommits;
+    static readonly HttpClient client = new HttpClient();
 
-void OnChange(string repoIdentifier)
-{
-    this.repoIdentifier = repoIdentifier;
-}
-
-async void OnClick(string buttonName)
-{   
-    analyseAllCommits();
-    analysePrAuthor();
-    analyseForks();
-} 
-
-async void analyseAllCommits(){
-    try
+    void OnChange(string repoIdentifier)
     {
-        HttpResponseMessage response = await client.GetAsync($"https://localhost:7235/analysis/{repoIdentifier}/frequency");
-        response.EnsureSuccessStatusCode();
-
-        var responseBody = await response.Content.ReadFromJsonAsync<FrequenciesDTO>();
-        var frequencyDictionary = responseBody.Frequencies;
-        allCommits = new commitItem[frequencyDictionary.Count];
-        convert(frequencyDictionary, allCommits);
+        this.repoIdentifier = repoIdentifier;
     }
-    catch (HttpRequestException e)
-    {
-        Console.WriteLine("\nException Caught!");
-        Console.WriteLine("Message :{0} ", e.Message);
-    }
-}
 
-async void analysePrAuthor(){
-     try
+    async void OnClick(string buttonName)
     {
-        HttpResponseMessage responsePrAuthor = await client.GetAsync($"https://localhost:7235/analysis/{repoIdentifier}/author");
-        responsePrAuthor.EnsureSuccessStatusCode();
+        analyseAllCommits();
+        analysePrAuthor();
+        analyseForks();
+    }
 
-        var responseBody = await responsePrAuthor.Content.ReadFromJsonAsync<AuthorsDTO>();
-        var authorDictionary = responseBody.AuthorFrequencies;
-        
-        foreach (var author in authorDictionary)
-        {  
-        commitItem[] authorArr = new commitItem[author.Value.Count];
-        convert(author.Value, authorArr);
-        commitsPrAuthor.Add(author.Key, authorArr);
-        } 
-    }
-    catch (HttpRequestException e)
+    async void analyseAllCommits()
     {
-        Console.WriteLine("\nException Caught!");
-        Console.WriteLine("Message :{0} ", e.Message);
-    }
-}
-
-async void analyseForks(){
-    try
-    {
-        HttpResponseMessage response = await client.GetAsync($"https://localhost:7235/analysis/{repoIdentifier}/forks");
-        response.EnsureSuccessStatusCode();
-        var responseBody = await response.Content.ReadFromJsonAsync<ForksDTO>();
-        var Forks = responseBody.Forks;
-    }
-    catch (HttpRequestException e)
-    {
-        Console.WriteLine("\nException Caught!");
-        Console.WriteLine("Message :{0} ", e.Message);
-    }
-}
-
-void convert(Dictionary<DateOnly, int> toBeConverted, commitItem[] arr){
-    var sortedDictionary = new SortedDictionary<DateOnly, int>(toBeConverted);
-    int counter = 0; 
-    foreach (var date in sortedDictionary)
-    {
-        arr[counter] = new commitItem
+        try
         {
-            Date = date.Key,
-            Commits = date.Value
-        };
-        counter++;        
+            HttpResponseMessage response = await client.GetAsync($"https://localhost:7235/analysis/{repoIdentifier}/frequency");
+            response.EnsureSuccessStatusCode();
+
+            var responseBody = await response.Content.ReadFromJsonAsync<FrequenciesDTO>();
+            var frequencyDictionary = responseBody.Frequencies;
+            allCommits = new commitItem[frequencyDictionary.Count];
+            convert(frequencyDictionary, allCommits);
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine("\nException Caught!");
+            Console.WriteLine("Message :{0} ", e.Message);
+        }
     }
-    StateHasChanged();
-}
 
-//Helper 
-class commitItem
-{
-    public DateOnly Date { get; set; }
-    public int Commits { get; set; }
-}
+    async void analysePrAuthor()
+    {
+        try
+        {
+            HttpResponseMessage responsePrAuthor = await client.GetAsync($"https://localhost:7235/analysis/{repoIdentifier}/author");
+            responsePrAuthor.EnsureSuccessStatusCode();
 
+            var responseBody = await responsePrAuthor.Content.ReadFromJsonAsync<AuthorsDTO>();
+            var authorDictionary = responseBody.AuthorFrequencies;
+
+            foreach (var author in authorDictionary)
+            {
+                commitItem[] authorArr = new commitItem[author.Value.Count];
+                convert(author.Value, authorArr);
+                commitsPrAuthor.Add(author.Key, authorArr);
+            }
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine("\nException Caught!");
+            Console.WriteLine("Message :{0} ", e.Message);
+        }
+    }
+
+    async void analyseForks()
+    {
+        try
+        {
+            HttpResponseMessage response = await client.GetAsync($"https://localhost:7235/analysis/{repoIdentifier}/forks");
+            response.EnsureSuccessStatusCode();
+            var responseBody = await response.Content.ReadFromJsonAsync<ForksDTO>();
+            var Forks = responseBody.Forks;
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine("\nException Caught!");
+            Console.WriteLine("Message :{0} ", e.Message);
+        }
+    }
+
+    void convert(Dictionary<DateOnly, int> toBeConverted, commitItem[] arr)
+    {
+        var sortedDictionary = new SortedDictionary<DateOnly, int>(toBeConverted);
+        int counter = 0;
+        foreach (var date in sortedDictionary)
+        {
+            arr[counter] = new commitItem
+            {
+                Date = date.Key,
+                Commits = date.Value
+            };
+            counter++;
+        }
+        StateHasChanged();
+    }
+
+    //Helper 
+    class commitItem
+    {
+        public DateOnly Date { get; set; }
+        public int Commits { get; set; }
+    }
 }

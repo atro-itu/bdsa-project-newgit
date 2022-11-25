@@ -11,21 +11,23 @@
 @using System.Text.Json.Serialization;
 @using System.Web.Mvc;
 
+
 <RadzenText TextStyle="TextStyle.H2" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
     Welcome to NEWgIT
 </RadzenText>
 
-<RadzenAlert AlertStyle="AlertStyle.Danger" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter" Visible="@ShowNotFoundAlert">
+<RadzenAlert AlertStyle="AlertStyle.Danger" ShowIcon="true" Variant="Variant.Flat" Shade="Shade.Lighter" Visible="@NotFoundAlert">
     Repository Not Found
 </RadzenAlert>
 
 <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3" TextAlign="TextAlign.Center"></RadzenText>
-<RadzenTextBox Placeholder="Insert github repository identifier" Change=@(args => OnChange(args)) Class="TextBox"/>
+<RadzenTextBox Placeholder="Insert repository username" Change=@(args => OnChangeRepoOwner(args)) Class="TextBox"/>
+<RadzenTextBox Placeholder="Insert repository name" Change=@(args => OnChangeRepoName(args)) Class="TextBox"/>
 
 
 <RadzenButton class="AnalyzeButton" Click=@(args => OnAnalysis("Primary button")) Text="Analyze" ButtonStyle="ButtonStyle.Primary"/>
 
-@if (repoIdentifier != null)
+@if (repoOwner != null && repoName != null)
 {
     <RadzenText TextStyle="TextStyle.H4" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
         Commit Frequency
@@ -64,49 +66,77 @@
 }
 
 @code {
-    //MOCK
     ICollection<string> Forks;
     Dictionary<DateOnly, int> frequencyDictionary;
     Dictionary<string, Dictionary<DateOnly, int>> authorDictionary;
     Dictionary<string, commitItem[]> commitsPrAuthor = new Dictionary<string, commitItem[]>();
     string[] commitsPrAuthors;
-    string repoIdentifier;
+    string repoOwner;
+    string repoName;
     commitItem[] allCommits;
     static readonly HttpClient client = new HttpClient();
+    bool NotFoundAlert = false;
 
-    //Error response
-    bool ShowNotFoundAlert = false;
-
-    void OnChange(string repoIdentifier)
+    void OnChangeRepoOwner(string repoOwner)
     {
-        this.repoIdentifier = repoIdentifier;
+        this.repoOwner = repoOwner;
+    }
+
+    void OnChangeRepoName(string repoName)
+    {
+        this.repoName = repoName;
     }
 
     async void OnAnalysis(string buttonName)
     {
+        NotFoundAlert = false;
+        StateHasChanged();
+
+        // TODO: Reset 
+        
+        analyse();
         analyseAllCommits();
         analysePrAuthor();
         analyseForks();
-        
+    }
+
+    async void analyse()
+    {
+        try
+        {
+            HttpResponseMessage responsePost = await client.PostAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}", null);
+            if ((int)responsePost.StatusCode == 409){
+                HttpResponseMessage responsePut = await client.PutAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}", null);
+            } 
+            if ((int)responsePost.StatusCode == 404){
+                NotFoundAlert = true;
+                StateHasChanged();
+                return;
+            }
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine("\nException Caught!");
+            Console.WriteLine("Message :{0} ", e.Message);
+        }
     }
 
     async void analyseAllCommits()
     {
         try
-        {
-            HttpResponseMessage response = await client.GetAsync($"https://localhost:7235/analysis/{repoIdentifier}/frequency");
-            if(!response.IsSuccessStatusCode){
-                ShowNotFoundAlert = true;
+        {   
+            HttpResponseMessage responseGet = await client.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/frequency");
+            if ((int)responseGet.StatusCode == 404){
+                NotFoundAlert = true;
                 StateHasChanged();
-            } else{
-            ShowNotFoundAlert = false;
-            response.EnsureSuccessStatusCode();
+                return;
+            }
+            responseGet.EnsureSuccessStatusCode();
 
-            var responseBody = await response.Content.ReadFromJsonAsync<FrequenciesDTO>();
+            var responseBody = await responseGet.Content.ReadFromJsonAsync<FrequenciesDTO>();
             var frequencyDictionary = responseBody.Frequencies;
             allCommits = new commitItem[frequencyDictionary.Count];
             convert(frequencyDictionary, allCommits);
-            }
         }
         catch (HttpRequestException e)
         {
@@ -119,7 +149,7 @@
     {
         try
         {
-            HttpResponseMessage responsePrAuthor = await client.GetAsync($"https://localhost:7235/analysis/{repoIdentifier}/author");
+            HttpResponseMessage responsePrAuthor = await client.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/author");
             responsePrAuthor.EnsureSuccessStatusCode();
 
             var responseBody = await responsePrAuthor.Content.ReadFromJsonAsync<AuthorsDTO>();
@@ -143,7 +173,7 @@
     {
         try
         {
-            HttpResponseMessage response = await client.GetAsync($"https://localhost:7235/analysis/{repoIdentifier}/forks");
+            HttpResponseMessage response = await client.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/forks");
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadFromJsonAsync<ForksDTO>();
             var Forks = responseBody.Forks;

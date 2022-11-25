@@ -46,3 +46,38 @@ NEWgIT.Core.Services.IForkFetcherService <|-- NEWgIT.Core.Services.ForkFetcherSe
 
 @enduml
 ```
+
+## Activity Diagram
+
+```plantuml
+@startuml
+|Controller|
+start
+note right: GET analysis/{owner}/{name}/{mode}
+
+|DatabaseLayer|
+if (analysis exists in db?) is (yes) then
+  :fetch analysis by identifier;
+else (no)
+  :Find repository by identifier;
+
+  |Services|
+  switch (mode)
+  case ( Frequency)
+    :CommitCounter frequency mode;
+  case ( Author) 
+    :CommitCounter author mode;
+  case ( Forks )
+    :ForkFetcherService get forks;
+  endswitch
+    
+  |DatabaseLayer|
+  :Persist data;
+endif
+
+|Controller|
+  :Serialize analysis object;
+end
+
+@enduml
+```

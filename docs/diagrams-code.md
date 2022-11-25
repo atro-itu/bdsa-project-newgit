@@ -69,7 +69,7 @@ NEWgIT.Core <|-- NEWgIT
 ## Activity Diagram
 
 ```plantuml
-@startuml
+@startuml activityDiagram
 |Controller|
 start
 note right: GET analysis/{owner}/{name}/{mode}

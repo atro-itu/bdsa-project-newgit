@@ -59,23 +59,40 @@ a, .btn-link {
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
 
-    .AnalyzeButton {
-        width: 30%;
-        margin-left: 35%; 
-        margin-top: 1%;
-    }
-    .prAuthorBox{
-        display: flex; 
-    }
-    .RadzenChartPrAuthor {
-        width: 100%;
-    }
+.AnalyzeButton {
+    width: 30%;
+    margin-left: 35%; 
+    margin-top: 1%;
+}
+.prAuthorBox{
+    display: flex; 
+}
+.RadzenChartPrAuthor {
+    width: 100%;
+}
 
-    .TextBox{
-        width: 50%;
-        margin-left: 25%; 
-    }
+.TextBox{
+    width: 50%;
+    margin-left: 25%; 
+}
+
+.forks-list{
+    display: flex; 
+    flex-direction: row;
+    width: 90%; 
+    margin: auto; 
+    flex-wrap: wrap; 
+    justify-content: space-evenly;
+}
+
+.forks-list .rz-g{
+    justify-content: center;
+}
+
+.forks-list .github-card{
+    margin: 12px 20px
+}

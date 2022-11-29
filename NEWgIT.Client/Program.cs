@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
+var apiScope = @"https://newgitb2c.onmicrosoft.com/newgit-api/access_as_user";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,7 +16,6 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseHsts();
 }
-
 
 app.UseStaticFiles();
 

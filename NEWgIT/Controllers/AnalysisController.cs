@@ -1,3 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
+
 namespace NEWgIT.Controllers;
 
 using NEWgIT.Core;
@@ -6,6 +10,8 @@ using NEWgIT.Core.Data;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
+[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 public class AnalysisController : ControllerBase
 {
     private readonly IAnalysisRepository _repository;

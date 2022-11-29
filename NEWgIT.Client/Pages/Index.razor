@@ -136,7 +136,7 @@
         {   
             HttpResponseMessage responseGet = await client.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/frequency");
             if ((int)responseGet.StatusCode == 404){
-                NotFoundAlertAuthors = true;
+                NotFoundAlert = true;
                 StateHasChanged();
                 return;
             }
@@ -160,7 +160,7 @@
         {
             HttpResponseMessage responsePrAuthor = await client.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/author");
             if ((int)responsePrAuthor.StatusCode == 404){
-                NotFoundAlert = true;
+                NotFoundAlertAuthors = true;
                 StateHasChanged();
                 return;
             }

@@ -20,6 +20,12 @@ None
 ## Week 5
 1. Implement an analysis and visualization of your choice in your `GitInsight` application.
 
+## Week 6
+1. Implements missing requirements.
+2. Complete documentation.
+3. Prepare 15 minute presentation about the application and answer the questions written in [week 6](https://github.com/duckth/bdsa-project-newgit/blob/main/docs/project-description.md).
+4. Presentation has to reside in the docs directory [here](https://github.com/duckth/bdsa-project-newgit/blob/main/docs).
+
 # Non Functional Requirements
 ## Week 1
 1. Build a small C#/.Net Core application that can be run from the command-line. As a parameter, it should receive the path to a Git repository that resides in a local directory, i.e., a directory on your computer.
@@ -83,3 +89,6 @@ None
 ## Week 5
 1. Extend your `GitInsight` application with a feature that restricts access only to authorized users. Users have to authenticate themselves before they are able to analyze a GitHub repository.
 2. The authentication should hold for the front-end web-application as well as for the back-end REST API.
+
+## Week 6
+1. Complete test suite.

@@ -100,3 +100,48 @@ end
 
 @enduml
 ```
+
+## Sequence Diagram
+
+```plantuml
+@startuml sequenceDiagram
+
+actor User
+participant NEWgIT.Client
+participant NEWgIT.Api
+participant NEWgIT.Core
+participant NEWgIT.Infrastructure
+
+User -> NEWgIT.Client : input repo owner and repo name
+NEWgIT.Client -> NEWgIT.Api : Post
+NEWgIT.Api -> NEWgIT.Core : FindByIdentifier
+NEWgIT.Api <- NEWgIT.Core : Response
+NEWgIT.Api -> NEWgIT.Core : GetRepoCommits
+NEWgIT.Api <- NEWgIT.Core : Response
+NEWgIT.Api -> NEWgIT.Core : Create
+NEWgIT.Api <- NEWgIT.Core : Response
+NEWgIT.Client <- NEWgIT.Api : Response
+
+activate NEWgIT.Client
+NEWgIT.Client -> NEWgIT.Api : Put
+note left
+  if recieved 409
+end note
+NEWgIT.Api -> NEWgIT.Core : GetRepoCommits
+NEWgIT.Api <-NEWgIT.Core : Response
+NEWgIT.Api -> NEWgIT.Core : Update
+NEWgIT.Api <- NEWgIT.Core : Response
+User <- NEWgIT.Client : Return
+note right
+  if recieved 404
+end note
+deactivate NEWgIT.Client
+NEWgIT.Client <- NEWgIT.Api : Response
+NEWgIT.Client -> NEWgIT.Api : Get (frequency)
+NEWgIT.Api -> NEWgIT.Core : FindByIdentifier
+NEWgIT.Core -> NEWgIT.Core : FrequencyMode
+NEWgIT.Core -> NEWgIT.Core : Response
+NEWgIT.Api <- NEWgIT.Core : Response
+
+@enduml
+```

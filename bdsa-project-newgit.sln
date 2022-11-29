@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEWgIT.Infrastructure.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEWgIT.Core.Tests", "NEWgIT.Core.Tests\NEWgIT.Core.Tests.csproj", "{D98C51FA-B841-4771-98DB-052350DEC8F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEWgIT.Client", "NEWgIT.Client\NEWgIT.Client.csproj", "{4AB70D6D-42AE-46C8-8AA9-C61F6FFC42CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{D98C51FA-B841-4771-98DB-052350DEC8F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D98C51FA-B841-4771-98DB-052350DEC8F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D98C51FA-B841-4771-98DB-052350DEC8F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AB70D6D-42AE-46C8-8AA9-C61F6FFC42CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AB70D6D-42AE-46C8-8AA9-C61F6FFC42CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AB70D6D-42AE-46C8-8AA9-C61F6FFC42CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AB70D6D-42AE-46C8-8AA9-C61F6FFC42CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

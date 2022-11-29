@@ -163,7 +163,7 @@ public class AnalysisControllerTests
         };
 
         _mockCommitFetcherService.GetRepoCommits("duckth/testrepo").Returns<(HashSet<CommitCreateDTO>, string)>((commitCreateDTO, "1234567891"));
-        var expected = new CreatedResult("duckth/testrepo", null);
+        var expected = new CreatedResult("duckth/testrepo", new { id = 0 });
 
         // Act
         var actual = _controller.Create("duckth", "testrepo").Result;

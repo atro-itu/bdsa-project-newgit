@@ -45,6 +45,10 @@
         </RadzenValueAxis>
     </RadzenChart>
 
+    <RadzenAlert AlertStyle="AlertStyle.Danger" ShowIcon="true" Variant="Variant.Flat" Shade="Shade.Lighter" Visible="@NotFoundAlertAuthors">
+        Authors Not Found
+    </RadzenAlert>
+
     <RadzenText TextStyle="TextStyle.H4" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
         Commit Frequency pr author
     </RadzenText>
@@ -79,6 +83,7 @@
     commitItem[] allCommits;
     static readonly HttpClient client = new HttpClient();
     bool NotFoundAlert = false;
+    bool NotFoundAlertAuthors = false;
 
     void OnChangeRepoOwner(string repoOwner)
     {
@@ -93,6 +98,7 @@
     async void OnAnalysis(string buttonName)
     {
         NotFoundAlert = false;
+        NotFoundAlertAuthors = false;
         StateHasChanged();
 
         // TODO: Reset 
@@ -130,7 +136,7 @@
         {   
             HttpResponseMessage responseGet = await client.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/frequency");
             if ((int)responseGet.StatusCode == 404){
-                NotFoundAlert = true;
+                NotFoundAlertAuthors = true;
                 StateHasChanged();
                 return;
             }
@@ -153,6 +159,12 @@
         try
         {
             HttpResponseMessage responsePrAuthor = await client.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/author");
+            if ((int)responsePrAuthor.StatusCode == 404){
+                NotFoundAlert = true;
+                StateHasChanged();
+                return;
+            }
+            
             responsePrAuthor.EnsureSuccessStatusCode();
 
             var responseBody = await responsePrAuthor.Content.ReadFromJsonAsync<AuthorsDTO>();

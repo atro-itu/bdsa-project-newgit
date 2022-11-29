@@ -160,7 +160,7 @@
         {
             HttpResponseMessage responsePrAuthor = await client.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/author");
             if ((int)responsePrAuthor.StatusCode == 404){
-                NotFoundAlert = true;
+                NotFoundAlertAuthors = true;
                 StateHasChanged();
                 return;
             }

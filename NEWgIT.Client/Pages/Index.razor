@@ -21,8 +21,11 @@
 </RadzenAlert>
 
 <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3" TextAlign="TextAlign.Center"></RadzenText>
-<RadzenTextBox Placeholder="Insert repository username" Change=@(args => OnChangeRepoOwner(args)) Class="TextBox"/>
-<RadzenTextBox Placeholder="Insert repository name" Change=@(args => OnChangeRepoName(args)) Class="TextBox"/>
+<div style="display: flex; flex-direction: row; width: 500px; margin: auto;">
+    <RadzenTextBox Placeholder="Repository owner" Change=@(args => OnChangeRepoOwner(args)) Class="TextBox" style="margin: 0px 12px"/>
+    <h2>/</h2>
+    <RadzenTextBox Placeholder="Repository name" Change=@(args => OnChangeRepoName(args)) Class="TextBox" style="margin: 0px 12px"/>
+</div>
 
 
 <RadzenButton class="AnalyzeButton" Click=@(args => OnAnalysis("Primary button")) Text="Analyze" ButtonStyle="ButtonStyle.Primary"/>

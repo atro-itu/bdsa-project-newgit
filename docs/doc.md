@@ -21,11 +21,10 @@ None
 1. Implement an analysis and visualization of your choice in your `GitInsight` application.
 
 ## Week 6
-1. Polish `GitInsight` application.
-2. Implements missing requirements.
-3. Complete documentatin.
-4. Prepare 15 minute presentation about the application and answer the questions written in [week 6](https://github.com/duckth/bdsa-project-newgit/blob/main/docs/project-description.md).
-5. Presentation has to reside in the docs directory [here](https://github.com/duckth/bdsa-project-newgit/blob/main/docs).
+1. Implements missing requirements.
+2. Complete documentation.
+3. Prepare 15 minute presentation about the application and answer the questions written in [week 6](https://github.com/duckth/bdsa-project-newgit/blob/main/docs/project-description.md).
+4. Presentation has to reside in the docs directory [here](https://github.com/duckth/bdsa-project-newgit/blob/main/docs).
 
 # Non Functional Requirements
 ## Week 1

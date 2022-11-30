@@ -8,6 +8,9 @@
 @using System.Text.Json;
 @using System.Text.Json.Serialization;
 
+@inject HttpClient Http
+
+
 
 <RadzenText TextStyle="TextStyle.H2" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
     Welcome to NEWgIT
@@ -24,8 +27,14 @@
     <RadzenTextBox Placeholder="Repository name" Change=@(args => OnChangeRepoName(args)) Class="TextBox" style="margin: 0px 12px"/>
 </div>
 
-
-<RadzenButton class="AnalyzeButton" Click=@(args => OnAnalysis("Primary button")) Text="Analyze" ButtonStyle="ButtonStyle.Primary"/>
+<AuthorizeView>
+    <Authorized>
+        <RadzenButton class="AnalyzeButton" Click=@(args => OnAnalysis("Primary button")) Text="Analyze" ButtonStyle="ButtonStyle.Primary"/>
+    </Authorized>
+    <NotAuthorized>
+        You need to log in.
+    </NotAuthorized>
+</AuthorizeView>
 
 @if (repoOwner != null && repoName != null)
 {
@@ -86,7 +95,6 @@
     string repoOwner;
     string repoName;
     commitItem[] allCommits;
-    static readonly HttpClient client = new HttpClient();
     bool NotFoundAlert = false;
     bool NotFoundAlertAuthors = false;
     Random rand = new Random();
@@ -123,9 +131,9 @@
     {
         try
         {
-            HttpResponseMessage responsePost = await client.PostAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}", null);
+            HttpResponseMessage responsePost = await Http.PostAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}", null);
             if ((int)responsePost.StatusCode == 409){
-                HttpResponseMessage responsePut = await client.PutAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}", null);
+                HttpResponseMessage responsePut = await Http.PutAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}", null);
             } 
             if ((int)responsePost.StatusCode == 404){
                 NotFoundAlert = true;
@@ -144,7 +152,7 @@
     {
         try
         {   
-            HttpResponseMessage responseGet = await client.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/frequency");
+            HttpResponseMessage responseGet = await Http.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/frequency");
             if ((int)responseGet.StatusCode == 404){
                 NotFoundAlert = true;
                 StateHasChanged();
@@ -168,7 +176,7 @@
     {
         try
         {
-            HttpResponseMessage responsePrAuthor = await client.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/author");
+            HttpResponseMessage responsePrAuthor = await Http.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/author");
             if ((int)responsePrAuthor.StatusCode == 404){
                 NotFoundAlertAuthors = true;
                 StateHasChanged();
@@ -198,7 +206,7 @@
     {
         try
         {
-            HttpResponseMessage response = await client.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/forks");
+            HttpResponseMessage response = await Http.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/forks");
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadFromJsonAsync<ForksDTO>();
             Forks = responseBody.Forks;

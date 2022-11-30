@@ -13,9 +13,4 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
     <PackageReference Include="Radzen.Blazor" Version="4.3.6" />
   </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\sample-data\weather.json" />
-  </ItemGroup>
-
 </Project>

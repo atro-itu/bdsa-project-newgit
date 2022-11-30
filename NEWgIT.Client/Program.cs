@@ -1,27 +1,29 @@
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using NEWgIT.Client;
+using System.Net.Http;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
-var apiScope = @"https://newgitb2c.onmicrosoft.com/newgit-api/access_as_user";
-var builder = WebApplication.CreateBuilder(args);
+var api_scope = @"https://newgitb2c.onmicrosoft.com/newgit-api/access_as_user";
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("WebAPI", 
+        client => client.BaseAddress = new Uri("https://localhost:7235/"))
+    .AddHttpMessageHandler(sp => sp.GetRequiredService<AuthorizationMessageHandler>()
+        .ConfigureHandler(
+            authorizedUrls: new [] { "https://localhost:7235/" },
+            scopes: new[] { api_scope } ));
 
-var app = builder.Build();
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
+    .CreateClient("WebAPI"));
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+builder.Services.AddMsalAuthentication(options =>
 {
-    app.UseHsts();
-}
-
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
-
-app.Run();
+    builder.Configuration.Bind("AzureAdB2C", options.ProviderOptions.Authentication);
+    options.ProviderOptions.DefaultAccessTokenScopes.Add("openid");
+    options.ProviderOptions.DefaultAccessTokenScopes.Add("offline_access");
+    options.ProviderOptions.DefaultAccessTokenScopes.Add(api_scope);
+});
+await builder.Build().RunAsync();

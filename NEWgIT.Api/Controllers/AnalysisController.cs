@@ -1,4 +1,4 @@
-namespace NEWgIT.Controllers;
+namespace NEWgIT.Api.Controllers;
 
 using NEWgIT.Core;
 using NEWgIT.Core.Services;

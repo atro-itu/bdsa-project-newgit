@@ -2,7 +2,7 @@ namespace NEWgIT.Tests.Controllers;
 
 using Xunit;
 using System.Collections.Generic;
-using NEWgIT.Controllers;
+using NEWgIT.Api.Controllers;
 using NSubstitute;
 using NEWgIT.Core;
 using NEWgIT.Core.Services;

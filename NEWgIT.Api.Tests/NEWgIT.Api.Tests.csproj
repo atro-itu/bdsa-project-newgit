@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NEWgIT\NEWgIT.csproj" />
+    <ProjectReference Include="..\NEWgIT.Api\NEWgIT.Api.csproj" />
   </ItemGroup>
 
 </Project>

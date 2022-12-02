@@ -110,9 +110,17 @@ actor User
 participant NEWgIT.Client
 participant NEWgIT.Api
 participant NEWgIT.Core
-participant NEWgIT.Infrastructure
+participant Azure
+
+'Log in
+
+User -> Azure : Acquire token
+User <- Azure : Reponse
+
+'Find repo
 
 User -> NEWgIT.Client : input repo owner and repo name
+NEWgIT.Client -> NEWgIT.Client : Log repo owner and repo name
 NEWgIT.Client -> NEWgIT.Api : Post
 NEWgIT.Api -> NEWgIT.Core : FindByIdentifier
 NEWgIT.Api <- NEWgIT.Core : Response
@@ -121,7 +129,6 @@ NEWgIT.Api <- NEWgIT.Core : Response
 NEWgIT.Api -> NEWgIT.Core : Create
 NEWgIT.Api <- NEWgIT.Core : Response
 NEWgIT.Client <- NEWgIT.Api : Response
-
 activate NEWgIT.Client
 NEWgIT.Client -> NEWgIT.Api : Put
 note left
@@ -137,11 +144,52 @@ note right
 end note
 deactivate NEWgIT.Client
 NEWgIT.Client <- NEWgIT.Api : Response
+
+'Get frequency
+
 NEWgIT.Client -> NEWgIT.Api : Get (frequency)
 NEWgIT.Api -> NEWgIT.Core : FindByIdentifier
 NEWgIT.Core -> NEWgIT.Core : FrequencyMode
 NEWgIT.Core -> NEWgIT.Core : Response
 NEWgIT.Api <- NEWgIT.Core : Response
+NEWgIT.Client <- NEWgIT.Api : Response
+activate NEWgIT.Client
+User <- NEWgIT.Client : Show not found
+note right
+  if commits not found
+end note
+User <- NEWgIT.Client : Show frequency commits
+note right
+  if commits found
+end note
+deactivate NEWgIT.Client
+
+'Get author
+
+NEWgIT.Client -> NEWgIT.Api : Get (author)
+NEWgIT.Api -> NEWgIT.Core : FindByIdentifier
+NEWgIT.Core -> NEWgIT.Core : AuthorMode
+NEWgIT.Core -> NEWgIT.Core : Response
+NEWgIT.Api <- NEWgIT.Core : Response
+NEWgIT.Client <- NEWgIT.Api : Response
+activate NEWgIT.Client
+User <- NEWgIT.Client : Show not found
+note right
+  if commits not found
+end note
+User <- NEWgIT.Client : Show author commits
+note right
+  if commits found
+end note
+deactivate NEWgIT.Client
+
+'Get forks
+
+NEWgIT.Client -> NEWgIT.Api : Get (forks)
+NEWgIT.Api -> NEWgIT.Core : FetchForks
+NEWgIT.Api <- NEWgIT.Core : Response
+NEWgIT.Client <- NEWgIT.Api : Response
+User <- NEWgIT.Client : Show Ok
 
 @enduml
 ```

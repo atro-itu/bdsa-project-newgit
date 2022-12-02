@@ -140,7 +140,7 @@ NEWgIT.Api -> NEWgIT.Core : Update
 NEWgIT.Api <- NEWgIT.Core : Response
 User <- NEWgIT.Client : Return
 note right
-  if recieved 404
+  if received 404
 end note
 deactivate NEWgIT.Client
 NEWgIT.Client <- NEWgIT.Api : Response

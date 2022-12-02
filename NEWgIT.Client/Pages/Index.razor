@@ -1,12 +1,5 @@
 ﻿@page "/"
-@using Radzen;
-@using System.Globalization;
-@using System;
 @using System.Linq;
-@using System.Collections.Generic;
-@using System.Net.Http;
-@using System.Text.Json;
-@using System.Text.Json.Serialization;
 
 @inject HttpClient Http
 
@@ -16,34 +9,36 @@
     Welcome to NEWgIT
 </RadzenText>
 
-<RadzenAlert AlertStyle="AlertStyle.Danger" ShowIcon="true" Variant="Variant.Flat" Shade="Shade.Lighter" Visible="@NotFoundAlert">
+<RadzenAlert AlertStyle="AlertStyle.Danger" ShowIcon="true" Variant="Variant.Flat" Shade="Shade.Lighter" Visible="@_notFoundAlert">
     Repository Not Found
 </RadzenAlert>
 
 <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3" TextAlign="TextAlign.Center"></RadzenText>
-<div style="display: flex; flex-direction: row; width: 500px; margin: auto;">
-    <RadzenTextBox Placeholder="Repository owner" Change=@(args => OnChangeRepoOwner(args)) Class="TextBox" style="margin: 0px 12px"/>
-    <h2>/</h2>
-    <RadzenTextBox Placeholder="Repository name" Change=@(args => OnChangeRepoName(args)) Class="TextBox" style="margin: 0px 12px"/>
-</div>
 
 <AuthorizeView>
     <Authorized>
+        <div style="display: flex; flex-direction: row; width: 500px; margin: auto;">
+            <RadzenTextBox Placeholder="Repository owner" Change=@(args => OnChangeRepoOwner(args)) Class="TextBox" style="margin: 0px 12px"/>
+            <h2>/</h2>
+            <RadzenTextBox Placeholder="Repository name" Change=@(args => OnChangeRepoName(args)) Class="TextBox" style="margin: 0px 12px"/>
+        </div>
         <RadzenButton class="AnalyzeButton" Click=@(args => OnAnalysis("Primary button")) Text="Analyze" ButtonStyle="ButtonStyle.Primary"/>
     </Authorized>
     <NotAuthorized>
-        You need to log in.
+        <div class="invalid login-warning ">
+            <span role="alert" class="">You need to log in.</span>
+        </div>
     </NotAuthorized>
 </AuthorizeView>
 
-@if (repoOwner != null && repoName != null)
+@if (_repoOwner != null && _repoName != null)
 {
     <RadzenText TextStyle="TextStyle.H4" TagName="TagName.H1" Class="my-4" TextAlign="TextAlign.Center">
         Commit Frequency
     </RadzenText>
 
     <RadzenChart>
-        <RadzenColumnSeries Data="@allCommits" CategoryProperty="Date" Title="All Commits" LineType="LineType.Dashed" ValueProperty="commits">
+        <RadzenColumnSeries Data="@_allCommits" CategoryProperty="Date" Title="All Commits" LineType="LineType.Dashed" ValueProperty="commits">
         </RadzenColumnSeries>
         <RadzenColumnOptions Radius="5"/>
         <RadzenValueAxis>
@@ -51,7 +46,7 @@
         </RadzenValueAxis>
     </RadzenChart>
 
-    <RadzenAlert AlertStyle="AlertStyle.Danger" ShowIcon="true" Variant="Variant.Flat" Shade="Shade.Lighter" Visible="@NotFoundAlertAuthors">
+    <RadzenAlert AlertStyle="AlertStyle.Danger" ShowIcon="true" Variant="Variant.Flat" Shade="Shade.Lighter" Visible="@_notFoundAlertAuthors">
         Authors Not Found
     </RadzenAlert>
 
@@ -59,7 +54,7 @@
         Commit Frequency pr author
     </RadzenText>
 
-@foreach (var author in commitsPrAuthor)
+@foreach (var author in _commitsPrAuthor)
 {
     <RadzenChart>
         <RadzenColumnSeries Data="@author.Value" CategoryProperty="Date" Title="@author.Key" LineType="LineType.Dashed" ValueProperty="commits">
@@ -75,68 +70,64 @@
         Forks
     </RadzenText>
     <div class="forks-list">
-        <RadzenDataList WrapItems="true" AllowPaging="false" Data="@ShownForks" TItem="string" EmptyText="This repository hasn't been forked">
+        <RadzenDataList WrapItems="true" AllowPaging="false" Data="@_shownForks" TItem="string" EmptyText="This repository hasn't been forked">
             <Template Context="fork">
                 <a href="https://github.com/@fork" class="github-card">
                     <img src="https://gh-card.dev/repos/@fork .svg?fullname="/>
                 </a>
             </Template>
         </RadzenDataList>
-        <RadzenPager ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat" HorizontalAlign="HorizontalAlign.Right" Count="count" PageSize="@pageSize" PageNumbersCount="5" PageChanged="@PageChanged" />
+        <RadzenPager ShowPagingSummary="true" PagingSummaryFormat="@PagingSummaryFormat" HorizontalAlign="HorizontalAlign.Right" Count="_count" PageSize="@PageSize" PageNumbersCount="5" PageChanged="@ForksPageChanged" />
     </div>
 }
 
 @code {
-    ICollection<string> Forks = new List<string>();
-    Dictionary<DateOnly, int> frequencyDictionary;
-    Dictionary<string, Dictionary<DateOnly, int>> authorDictionary;
-    Dictionary<string, commitItem[]> commitsPrAuthor = new Dictionary<string, commitItem[]>();
-    string[] commitsPrAuthors;
-    string repoOwner;
-    string repoName;
-    commitItem[] allCommits;
-    bool NotFoundAlert = false;
-    bool NotFoundAlertAuthors = false;
-    Random rand = new Random();
-    string pagingSummaryFormat = "Displaying page {0} of {1} (total {2} records)";
-    int pageSize = 6;
-    int count;
-    IEnumerable<string> ShownForks;
+    ICollection<string> _forks = new List<string>();
+    readonly Dictionary<string, CommitItem[]> _commitsPrAuthor = new Dictionary<string, CommitItem[]>();
+    string? _repoOwner;
+    string? _repoName;
+    CommitItem[]? _allCommits;
+    bool _notFoundAlert = false;
+    bool _notFoundAlertAuthors = false;
+    const string PagingSummaryFormat = "Displaying page {0} of {1} (total {2} records)";
+    const int PageSize = 6;
+    int _count;
+    IEnumerable<string>? _shownForks;
 
     void OnChangeRepoOwner(string repoOwner)
     {
-        this.repoOwner = repoOwner;
+        this._repoOwner = repoOwner;
     }
 
     void OnChangeRepoName(string repoName)
     {
-        this.repoName = repoName;
+        this._repoName = repoName;
     }
 
     async void OnAnalysis(string buttonName)
     {
-        NotFoundAlert = false;
-        NotFoundAlertAuthors = false;
-        StateHasChanged();
+        _notFoundAlert = false;
+        _notFoundAlertAuthors = false;
 
         // TODO: Reset 
         
-        analyse();
-        analyseAllCommits();
-        analysePrAuthor();
-        analyseForks();
+        await Analyse();
+        await AnalyseAllCommits();
+        AnalysePrAuthor();
+        AnalyseForks();
+        StateHasChanged();
     }
 
-    async void analyse()
+    async Task Analyse()
     {
         try
         {
-            HttpResponseMessage responsePost = await Http.PostAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}", null);
+            HttpResponseMessage responsePost = await Http.PostAsync($"https://localhost:7235/analysis/{_repoOwner}/{_repoName}", null);
             if ((int)responsePost.StatusCode == 409){
-                HttpResponseMessage responsePut = await Http.PutAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}", null);
+                HttpResponseMessage responsePut = await Http.PutAsync($"https://localhost:7235/analysis/{_repoOwner}/{_repoName}", null);
             } 
             if ((int)responsePost.StatusCode == 404){
-                NotFoundAlert = true;
+                _notFoundAlert = true;
                 StateHasChanged();
                 return;
             }
@@ -148,22 +139,25 @@
         }
     }
 
-    async void analyseAllCommits()
+    async Task AnalyseAllCommits()
     {
         try
         {   
-            HttpResponseMessage responseGet = await Http.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/frequency");
+            HttpResponseMessage responseGet = await Http.GetAsync($"https://localhost:7235/analysis/{_repoOwner}/{_repoName}/frequency");
             if ((int)responseGet.StatusCode == 404){
-                NotFoundAlert = true;
+                _notFoundAlert = true;
                 StateHasChanged();
                 return;
             }
             responseGet.EnsureSuccessStatusCode();
 
             var responseBody = await responseGet.Content.ReadFromJsonAsync<FrequenciesDTO>();
-            var frequencyDictionary = responseBody.Frequencies;
-            allCommits = new commitItem[frequencyDictionary.Count];
-            convert(frequencyDictionary, allCommits);
+            if (responseBody == null) return;
+            
+            var frequencyResponse = responseBody.Frequencies;
+            _allCommits = frequencyResponse.OrderBy((pair) => pair.Key)
+                                          .Select((pair) => new CommitItem{Date = pair.Key, Commits =  pair.Value})
+                                          .ToArray();
         }
         catch (HttpRequestException e)
         {
@@ -172,13 +166,13 @@
         }
     }
 
-    async void analysePrAuthor()
+    async void AnalysePrAuthor()
     {
         try
         {
-            HttpResponseMessage responsePrAuthor = await Http.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/author");
+            HttpResponseMessage responsePrAuthor = await Http.GetAsync($"https://localhost:7235/analysis/{_repoOwner}/{_repoName}/author");
             if ((int)responsePrAuthor.StatusCode == 404){
-                NotFoundAlertAuthors = true;
+                _notFoundAlertAuthors = true;
                 StateHasChanged();
                 return;
             }
@@ -186,14 +180,18 @@
             responsePrAuthor.EnsureSuccessStatusCode();
 
             var responseBody = await responsePrAuthor.Content.ReadFromJsonAsync<AuthorsDTO>();
-            var authorDictionary = responseBody.AuthorFrequencies;
-            commitsPrAuthor.Clear();
-            foreach (var author in authorDictionary)
+            if (responseBody == null) return;
+            var authorResponse = responseBody.AuthorFrequencies;
+            _commitsPrAuthor.Clear();
+            foreach (var author in authorResponse)
             {
-                commitItem[] authorArr = new commitItem[author.Value.Count];
-                convert(author.Value, authorArr);
-                commitsPrAuthor.Add(author.Key, authorArr);
+                var authorArr = author.Value.OrderBy((pair) => pair.Key)
+                                                       .Select((pair) => new CommitItem{Date = pair.Key, Commits =  pair.Value})
+                                                       .ToArray();
+                
+                _commitsPrAuthor.Add(author.Key, authorArr);
             }
+
         }
         catch (HttpRequestException e)
         {
@@ -202,15 +200,16 @@
         }
     }
 
-    async void analyseForks()
+    async void AnalyseForks()
     {
         try
         {
-            HttpResponseMessage response = await Http.GetAsync($"https://localhost:7235/analysis/{repoOwner}/{repoName}/forks");
+            HttpResponseMessage response = await Http.GetAsync($"https://localhost:7235/analysis/{_repoOwner}/{_repoName}/forks");
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadFromJsonAsync<ForksDTO>();
-            Forks = responseBody.Forks;
-            await ForksLoadedAsync();
+            if (responseBody == null) return;
+            _forks = responseBody.Forks;
+            ForksLoaded();
             StateHasChanged();
         }
         catch (HttpRequestException e)
@@ -220,41 +219,24 @@
         }
     }
 
-    void convert(Dictionary<DateOnly, int> toBeConverted, commitItem[] arr)
+    private void ForksLoaded()
     {
-        var sortedDictionary = new SortedDictionary<DateOnly, int>(toBeConverted);
-        int counter = 0;
-        
-        foreach (var date in sortedDictionary)
-        {
-            arr[counter] = new commitItem
-            {
-                Date = date.Key,
-                Commits = date.Value
-            };
-            counter++;
-        }
-        StateHasChanged();
+        _count = _forks.Count();
+        _shownForks = GetForks(0, PageSize);
     }
 
-    protected async Task ForksLoadedAsync()
+    void ForksPageChanged(PagerEventArgs args)
     {
-        count = Forks.Count();
-        ShownForks = GetForks(0, pageSize);
-    }
-
-    void PageChanged(PagerEventArgs args)
-    {
-        ShownForks = GetForks(args.Skip, args.Top);
+        _shownForks = GetForks(args.Skip, args.Top);
     }
 
     IEnumerable<string> GetForks(int skip, int take)
     {
-        return Forks.Skip(skip).Take(take).ToList();
+        return _forks.Skip(skip).Take(take).ToList();
     }
 
     //Helper 
-    class commitItem
+    class CommitItem
     {
         public DateOnly Date { get; set; }
         public int Commits { get; set; }

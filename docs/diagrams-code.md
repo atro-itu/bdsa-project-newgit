@@ -132,7 +132,7 @@ NEWgIT.Client <- NEWgIT.Api : Response
 activate NEWgIT.Client
 NEWgIT.Client -> NEWgIT.Api : Put
 note left
-  if recieved 409
+  if received 409
 end note
 NEWgIT.Api -> NEWgIT.Core : GetRepoCommits
 NEWgIT.Api <-NEWgIT.Core : Response

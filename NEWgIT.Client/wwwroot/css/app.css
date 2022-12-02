@@ -26,6 +26,15 @@ a, .btn-link {
     outline: 1px solid #26b050;
 }
 
+.login-warning {
+    color: red;
+    width: 500px;
+    margin: auto;
+    background-color: rgb(253, 218, 223);
+    border-radius: 6px;
+    padding: 12px;
+}
+
 .invalid {
     outline: 1px solid red;
 }

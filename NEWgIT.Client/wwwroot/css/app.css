@@ -34,6 +34,44 @@ a, .btn-link {
     color: red;
 }
 
+.AnalyzeButton {
+    width: 30%;
+    margin-left: 35%;
+    margin-top: 1%;
+}
+.prAuthorBox{
+    display: flex;
+}
+.RadzenChartPrAuthor {
+    width: 100%;
+}
+
+.TextBox{
+    width: 50%;
+    margin-left: 25%;
+}
+
+.forks-list{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    margin: auto;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.forks-list .rz-g{
+    justify-content: center;
+}
+
+.forks-list .github-card{
+    margin: 12px 20px
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
@@ -59,40 +97,39 @@ a, .btn-link {
     color: white;
 }
 
-.blazor-error-boundary::after {
-    content: "An error has occurred."
+    .blazor-error-boundary::after {
+        content: "An error has occurred."
+    }
+
+.loading-progress {
+    position: relative;
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    margin: 20vh auto 1rem auto;
 }
 
-.AnalyzeButton {
-    width: 30%;
-    margin-left: 35%; 
-    margin-top: 1%;
-}
-.prAuthorBox{
-    display: flex; 
-}
-.RadzenChartPrAuthor {
-    width: 100%;
+    .loading-progress circle {
+        fill: none;
+        stroke: #e0e0e0;
+        stroke-width: 0.6rem;
+        transform-origin: 50% 50%;
+        transform: rotate(-90deg);
+    }
+
+        .loading-progress circle:last-child {
+            stroke: #1b6ec2;
+            stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+            transition: stroke-dasharray 0.05s ease-in-out;
+        }
+
+.loading-progress-text {
+    position: absolute;
+    text-align: center;
+    font-weight: bold;
+    inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
 }
 
-.TextBox{
-    width: 50%;
-    margin-left: 25%; 
-}
-
-.forks-list{
-    display: flex; 
-    flex-direction: row;
-    width: 90%; 
-    margin: auto; 
-    flex-wrap: wrap; 
-    justify-content: space-evenly;
-}
-
-.forks-list .rz-g{
-    justify-content: center;
-}
-
-.forks-list .github-card{
-    margin: 12px 20px
-}
+    .loading-progress-text:after {
+        content: var(--blazor-load-percentage-text, "Loading");
+    }

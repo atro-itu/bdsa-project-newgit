@@ -1,27 +1,32 @@
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using NEWgIT.Client;
+using System.Net.Http;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-builder.Services.AddHttpClient();
+var ApiBaseAddress = builder.Configuration.GetValue<string>("NewgitApi:BaseAddress")!;
+var ApiAccessScope = builder.Configuration.GetValue<string>("NewgitApi:AccessScopeUrl")!;
 
-var app = builder.Build();
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+builder.Services.AddHttpClient("WebAPI",
+        client => client.BaseAddress = new Uri(ApiBaseAddress))
+    .AddHttpMessageHandler(sp => sp.GetRequiredService<AuthorizationMessageHandler>()
+        .ConfigureHandler(
+            authorizedUrls: new[] { ApiBaseAddress },
+            scopes: new[] { ApiAccessScope }));
+
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
+    .CreateClient("WebAPI"));
+
+builder.Services.AddMsalAuthentication(options =>
 {
-    app.UseHsts();
-}
-
-
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
-
-app.Run();
+    builder.Configuration.Bind("AzureAdB2C", options.ProviderOptions.Authentication);
+    options.ProviderOptions.DefaultAccessTokenScopes.Add("openid");
+    options.ProviderOptions.DefaultAccessTokenScopes.Add("offline_access");
+    options.ProviderOptions.DefaultAccessTokenScopes.Add(ApiAccessScope);
+});
+await builder.Build().RunAsync();

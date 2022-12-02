@@ -7,3 +7,6 @@ global using Newtonsoft.Json;
 global using Microsoft.EntityFrameworkCore.Design;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Configuration;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.Identity.Web;
+global using Microsoft.OpenApi.Models;

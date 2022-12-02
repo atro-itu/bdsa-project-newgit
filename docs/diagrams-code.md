@@ -115,7 +115,7 @@ participant Azure
 'Log in
 
 User -> Azure : Acquire token
-User <- Azure : Reponse
+User <-- Azure : Reponse
 
 'Find repo
 par

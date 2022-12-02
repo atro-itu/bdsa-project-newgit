@@ -175,11 +175,11 @@ NEWgIT.Core -> NEWgIT.Core : Response
 NEWgIT.Api <-- NEWgIT.Core : Response
 NEWgIT.Client <-- NEWgIT.Api : Response
 activate NEWgIT.Client
-User <- NEWgIT.Client : Show not found
+User <-- NEWgIT.Client : Show not found
 note right
   if commits not found
 end note
-User <- NEWgIT.Client : Show author commits
+User <-- NEWgIT.Client : Show author commits
 note right
   if commits found
 end note
@@ -190,7 +190,7 @@ else
 
 NEWgIT.Client -> NEWgIT.Api : Get (forks)
 NEWgIT.Api -> NEWgIT.Core : FetchForks
-NEWgIT.Api <- NEWgIT.Core : Response
+NEWgIT.Api <-- NEWgIT.Core : Response
 NEWgIT.Client <-- NEWgIT.Api : Response
 User <-- NEWgIT.Client : Show Ok
 end

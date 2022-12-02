@@ -18,4 +18,4 @@ This is the activity diagram for API. It shows the different activities that are
 ## Sequence Diagram
 
 This is the sequence diagram seen from when a user start interacting with `NEWgIT`.
-![Sequence Diagram](../image/sequence_diagram.png)
+![Sequence Diagram](../images/sequence_diagram.png)

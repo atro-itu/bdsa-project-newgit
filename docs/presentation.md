@@ -1,5 +1,11 @@
 # Presentation for week 49
 
+## Design Patterns
+
+## Architectural Patterns
+
+## Design Principles
+
 ## UML
 
 ### Package Diagram

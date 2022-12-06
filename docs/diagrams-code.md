@@ -38,7 +38,7 @@ namespace NEWgIT.Infrastructure{
   class GitContext{}
 }
 
-namespace NEWgIT{
+namespace NEWgIT.Api{
   namespace Controller{
     class AnalysisController{}
   }
@@ -61,7 +61,7 @@ NEWgIT.Infrastructure.Analysis <|-- NEWgIT.Infrastructure.GitContext
 NEWgIT.Infrastructure.CommitInfo <|-- NEWgIT.Infrastructure.GitContext
 
 'Outgoing NEWgIT.Controller.AnalysisController dependencies'
-NEWgIT.Core <|-- NEWgIT
+NEWgIT.Core <|-- NEWgIT.Api
 
 @enduml
 ```

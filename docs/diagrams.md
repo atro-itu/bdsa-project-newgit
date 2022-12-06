@@ -12,10 +12,15 @@ The reason that `NEWgIT` is not shown to depend on `AnalysisRepository` or `NEWg
 
 ## Activity Diagram
 
-This is the activity diagram for API. It shows the different activities that are performed when the user requests an analysis.
+This is the activity diagram for API.
+It shows the different activities that are performed when the user requests an analysis.
+
 ![Activity Diagram](../images/activity_diagram.png)
 
 ## Sequence Diagram
 
-This is the sequence diagram seen from when a user starts interacting with `NEWgIT`.
+This is the sequence diagram seen from when a user starts interacting with `NEWgIT.Api`.
+
 ![Sequence Diagram](../images/sequence_diagram.png)
+
+`NEWgIT.Infrastructure` is not shown because `NEWgIT.Api` only "knows" about the `IAnalysisRepository` and not about its implementation.

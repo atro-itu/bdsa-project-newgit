@@ -3,9 +3,6 @@
 ## Application Correctness
 
 Functional:
-
-1. GIT analyzations has to be stored in a database.
-
 Manually:
 
 1. Implement visualizations to your .Net Blazor front-ends that look similar to those in the illustrations on top of the docs.
@@ -20,7 +17,7 @@ Non functional:
 AnalysisRepositoryTests:
 
 1. Build a small C#/.Net Core application that can be run from the command-line.
-2. Given that path to a repository, your application should collect all commits with respective author names and author dates. 
+2. Given that path to a repository, your application should collect all commits with respective author names and author dates.
 3. The analyzations has to know which repo they are from:
     If repo is re-analyzed and analyzations are outdated it has to update the database (line 234)
     If repo is re-analyzed and analyzations are up to date it has to read analyzations from the database (line 206)
@@ -32,20 +29,26 @@ AnalysisControllerTest:
 2. When running GitInsight in commit author mode, it should produce textual output on stdout that lists the number of commits per day per author.
 3. In case the repository was already cloned earlier, then the respective local repository shall be updated
 4. The REST API shall return the analysis results via a JSON object
+5. The REST API shall receive a repository identifier from GitHub.
+6. If the repository does not exist locally, then your GitInsight application shall clone the remote repository from GitHub and store it in a temporary local directory on your computer
+7. In case the repository was already cloned earlier, then the respective local repository shall be updated.
 
 Manually:
 
 1. Extend your GitInsight application with a feature that restricts access only to authorized users. Users have to authenticate themselves before they are able to analyze a GitHub repository.
+2. To connect to the GitHub REST API, you need an Access Token
 
 ## Design Patterns
 
-Singleton yay
+CommitFetcherService and ForkFetcherService are implemeted as Singletons. This means that there will only ever be one instance of them.  
+
+This is especially useful for the ForkFetcherService, as it takes a USER_SECRET with a personal access token when initialized. The token is needed for making calls to the GitHub API, but doesn't ever change after set the first time.
 
 ## Architectural Patterns
 
 Our implementation is based on the clean architecture discussed in the lectures. The blazor page is handling both the presentation and the UI. when user input has been handled, it is passed to the controller which sends it to our analysis repository which handles business logic.
 
-This business logic is done on already stored analysis entities which are accessed with database contexts
+This business logic is done on already stored analysis entities which are accessed with database contexts. The entity is then propogated to the presenter which showcases the information in a way that is understandable.
 
 ### Authentication & Authorization
 
@@ -59,16 +62,24 @@ To protect against malicious front-end users, this is also enforced in the backe
 
 Single responsebility
 
-1. The `AnalysisController` class is responsible for handeling HTTP requests related to code analysis, and the `ICommitFetcherService` and `IForkFetcherService` interfaces define a clear set of methods for fetching commits and forks, respectively.  
+1. The `AnalysisController` class is responsible for handeling HTTP requests related to code analysis, and the `ICommitFetcherService` and `IForkFetcherService` interfaces defines a clear set of methods for fetching commits and forks, respectively.  
 
 Dependency inversion
-1. The `AnalysisController` class follows this principle because it uses construtor injection to inject dependencies into the ?`AnalysisController` class. This allows the class to depend on abstactions in this case interfaces, rather than on concrete implementations of those abstractions. By using this, our code becomes more flexible and eaiser to maintain because the dependencies of the `AnalysisController` class can be changed without modifying the class itself.  
+
+1. The `AnalysisController` class follows this principle because it uses construtor injection to inject dependencies into the `AnalysisController` class. This allows the class to depend on abstractions in this case interfaces, rather than on concrete implementations of those abstractions. By using this, our code becomes more flexible and easier to maintain because the dependencies of the `AnalysisController` class can be changed without modifying the class itself.  
+
+The Interface Segregation Principle
+
+1. The program has many small interfaces that classes implement. The classes that implements the interfaces uses the behavoir from the methods in the interface. The classes use all of these message, to define a certain behavior without any redundant methods.
 
 ## Testing and Code Quality
 
+Another benefit of using dependency injection is that it makes it easier to write tests of the classes using the injections, as this allows us to use mocking to create "fake" or "mock" instances of the dependency, and then inject that into the class, for example when testing our controller.
+`
+
 At the start the tests lacked a bit behind the development.
 When the tests were written to get 100% coverage SonarCloud was also implemented.
-SonarCloud also makes sure that the code quality is good, and we do not have any codesmells.
+SonarCloud also makes sure that the code quality is good, and we do not have any code smells.
 This can be seen here: ![SonarCloud](../images/sonarcloud_overview.png)
 
 Even though we have 100% coverage, we have not implemented any integreation tests.
@@ -151,19 +162,19 @@ This is the package diagram for the project. It shows the different packages and
 
 ![Package Diagram](../images/package_diagram.png)
 
-The reason that `NEWgIT` is not shown to depend on `AnalysisRepository` or `NEWgIT.Infrastructure` is because it depends on `IAnalysisRepository`. Later in the runtime `IAnalysisRepository` will be implemented by the concrete class.
+The reason that `NEWgIT.Api` is not shown to depend on `AnalysisRepository` or `NEWgIT.Infrastructure` is because it depends on `IAnalysisRepository`. Later in the runtime `IAnalysisRepository` will be implemented by the concrete class.
 
 ### Activity Diagram
 
-This is the activity diagram for API. 
+This is the activity diagram for API.
 It shows the different activities that are performed when the user requests an analysis.
 
 ![Activity Diagram](../images/activity_diagram.png)
 
 ### Sequence Diagram
 
-This is the sequence diagram seen from when a user starts interacting with `NEWgIT`.
+This is the sequence diagram seen from when a user starts interacting with `NEWgIT.Api`.
 
 ![Sequence Diagram](../images/sequence_diagram.png)
 
-`NEWgIT.Infrastructure` is not shown because `NEWgIT` only "knows" about the `IAnalysisRepository` and not about its implementation.
+`NEWgIT.Infrastructure` is not shown because `NEWgIT.Api` only "knows" about the `IAnalysisRepository` and not about its implementation.

@@ -86,7 +86,7 @@ public class AnalysisController : ControllerBase
         var sourceUrl = GetSourceUrl(repoIdentifier);
         var (commits, hash) = _commitFetcherService.GetRepoCommits(sourceUrl);
 
-        var (response, analysisId) = _repository.Create(new AnalysisCreateDTO(repoIdentifier, commits, hash));
+        var (_response, analysisId) = _repository.Create(new AnalysisCreateDTO(repoIdentifier, commits, hash));
 
         return Created(repoIdentifier, new { id = analysisId });
     }
